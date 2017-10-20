@@ -31,8 +31,11 @@ export class TweetArea extends React.Component {
   render() {
     return (
       <div>
+        <h1>{this.props.number + 1}</h1>
         <textarea value={this.state.value} onChange={this.handleChange} />
         <p>{this.state.characters} characters of {maxLength} ({this.state.remaining} remaining)</p>
+        <br />
+        <br />
       </div>
       );
   }

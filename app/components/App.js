@@ -13,14 +13,21 @@ export class ParentComponent extends React.Component {
   constructor(props) { 
     super(props);
     this.state = {
-        numTweets : 0
+        numTweets : 1
     };
     this.onAddTweet = this.onAddTweet.bind(this);
+    this.onDeleteTweet = this.onDeleteTweet.bind(this);
   }
 
   onAddTweet() { 
     this.setState({
       numTweets : this.state.numTweets + 1
+    });
+  }
+
+  onDeleteTweet() {
+    this.setState({
+      numTweets : this.state.numTweets - 1
     });
   }
 
@@ -35,7 +42,7 @@ export class ParentComponent extends React.Component {
 
     return (
       <div>
-      <TweetStorm addTweet={this.onAddTweet}>
+      <TweetStorm addTweet={this.onAddTweet} deleteTweet={this.onDeleteTweet}>
         {tweets}
       </TweetStorm >
       </div>
@@ -51,10 +58,12 @@ export class TweetStorm extends React.Component {
       <button onClick={this.props.addTweet}>
         Add Tweet
       </button>
+      <button onClick={this.props.deleteTweet}>
+        Delete Tweet
+      </button>
       <div id="tweetstorm-div">
         {this.props.children}
       </div>
-      <TweetArea />
     </div>
     );
   }
