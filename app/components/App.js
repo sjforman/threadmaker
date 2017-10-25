@@ -26,9 +26,12 @@ export class ParentComponent extends React.Component {
   }
 
   onDeleteTweet() {
-    this.setState({
-      numTweets : this.state.numTweets - 1
-    });
+    if (this.state.numTweets > 1) {
+      console.log(this.state.numTweets);
+      this.setState({
+        umTweets : this.state.numTweets - 1
+      });
+    }
   }
 
   render() {
@@ -37,8 +40,6 @@ export class ParentComponent extends React.Component {
     for (var i = 0; i < this.state.numTweets; i+=1) {
       tweets.push(<TweetArea key={i} number={i} />);
     };
-
-    console.log(tweets);
 
     return (
       <div>
