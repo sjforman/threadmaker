@@ -4,15 +4,20 @@ var HTMLWebpackPluginConfig = new HTMLWebpackPlugin({
   filename: 'index.html',
   inject: 'body'
 });
+var ExtractTextPlugin = require('extract-text-webpack-plugin') 
 
 module.exports = {
   entry: __dirname + '/app/index.js',
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader'
+        use: 'babel-loader'
+      },
+      {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract('style-loader', 'css-loader')
       }
     ]
   },
@@ -20,5 +25,6 @@ module.exports = {
     filename: 'transformed.js',
     path: __dirname + '/build'
   },
-  plugins: [HTMLWebpackPluginConfig]
+  plugins: [HTMLWebpackPluginConfig,
+  new ExtractTextPlugin('[name].css', {allChunks: true})]
 };
