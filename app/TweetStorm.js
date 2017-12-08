@@ -5,7 +5,7 @@ class TweetStorm extends React.Component {
   render() {
     return (
     <div>
-      <div id="buttons">
+      <div id="buttons" className="tc mb4">
         <a className="f6 link dim br1 ba bw1 ph3 pv2 mb2 mr1 dib mid-gray" href="#" onClick={this.props.addTweet}>
           Add Tweet
         </a>
@@ -39,7 +39,6 @@ export class TweetStormParent extends React.Component {
 
   onDeleteTweet() {
     if (this.state.numTweets > 1) {
-      console.log(this.state.numTweets);
       this.setState({
         numTweets : this.state.numTweets - 1
       });
@@ -49,13 +48,13 @@ export class TweetStormParent extends React.Component {
   render() {
     const tweets = [];
 
-    for (var i = 0; i < this.state.numTweets; i+=1) {
-      tweets.push(<TweetArea key={i} number={i} />);
+    for (var i = 1; i < this.state.numTweets; i+=1) {
+      tweets.push(<TweetArea key= {i} number={i} />);
     };
 
     return (
       <div>
-      <TweetStorm addTweet={this.onAddTweet} deleteTweet={this.onDeleteTweet}>
+      <TweetStorm addTweet={this.onAddTweet} deleteTweet={this.onDeleteTweet} numTweets={tweets.length}>
         {tweets}
       </TweetStorm >
       </div>

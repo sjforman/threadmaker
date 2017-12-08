@@ -1,17 +1,16 @@
 import React from 'react';
 
-var maxLength = 140;
+var maxLength = 280;
 
 export class TweetArea extends React.Component {
   constructor(props) {
     super(props);
-    this.props = {
-      key: '',
-      number: ''
+    props = {
+      number: '',
+      key: ''
     };
 
     this.state = {
-        value: '',
         characters: 0, 
         remaining: maxLength
     };
@@ -30,12 +29,19 @@ export class TweetArea extends React.Component {
 
   render() {
     return (
-      <div>
-        <h1>{this.props.number + 1}</h1>
-        <textarea class="db border-box hover-black w-100 measure ba b--black-20 pa2 br2 mb2" value={this.state.value} onChange={this.handleChange} />
-        <p>{this.state.characters} / {maxLength} ({this.state.remaining} remaining)</p>
-        <br />
-        <br />
+      <div className="mw9 center ph3-ns mb3 bb">
+        <div className="cf ph2-ns">
+          <div className="fl w-100 w-20-ns pa2">
+            <h3 className="">{this.props.number}</h3>
+          </div>
+          <div className="fl w-100 w-40-ns pa2">
+            <textarea className="db border-box hover-black ba b--black-20 pa2 br2 mb2 h4" onChange={this.handleChange} />
+            <p>{this.state.characters} / {maxLength} ({this.state.remaining} remaining)</p>
+          </div>
+          <div className="fl w-100 w-40-ns pa2 measure-narrow">
+            {this.state.value}
+          </div>
+        </div>
       </div>
       );
   }
