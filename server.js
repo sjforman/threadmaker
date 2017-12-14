@@ -4,7 +4,7 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
-var TweetStorm = require('./model/tweetstorm');
+var Tweet = require('./model/tweetstorm');
 
 var app = express();
 var router = express.Router();
@@ -33,17 +33,17 @@ router.get('/', function(req, res) {
 
 router.route('/tweets')
   .get(function(req, res) {
-    TweetStorm.find(function(err, tweets) {
+    Tweet.find(function(err, tweets) {
       if (err)
         res.send(err);
       res.json(tweets)
     });
   })
   .post(function(req, res) {
-    var tweetstorm = new TweetStorm();
-    tweetstorm.text = req.body.text;
+    var tweet = new Tweet();
+    tweet.text = req.body.text;
 
-    tweetstorm.save(function(err) {
+    tweet.save(function(err) {
       if (err)
         res.send(err);
         res.json({ message: 'Tweet successfully added!' });

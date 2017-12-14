@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
-import css from './index.css';
-import { TweetStormParent } from './TweetStorm';
+import { Thread } from './Thread';
 
 class App extends Component {
   render() {
@@ -11,9 +10,7 @@ class App extends Component {
           <img src={logo} className="w3 mt3" alt="logo" />
           <h1 className="tc">Tweetstormer</h1>
         </header>
-        <TweetStormParent
-          url='http://localhost:3001/api/tweets'
-          pollInterval={2000} />
+        <Thread/>
       </div>
     );
   }
