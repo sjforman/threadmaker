@@ -1,7 +1,7 @@
 import React from 'react';
-import { Tweet } from './TweetArea';
+import { Tweet } from './Tweet';
 
-class TweetStorm extends React.Component {
+class ThreadContainer extends React.Component {
   render() {
     return (
     <div>
@@ -9,11 +9,8 @@ class TweetStorm extends React.Component {
         <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 mr1 dib mid-gray" href="#" onClick={this.props.addTweet}>
         +
         </button>
-        <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 dib mid-gray" href="#" onClick={this.props.deleteTweet}>
-        -
-        </button>
       </div>
-      <div id="tweetstorm-div">
+      <div>
         {this.props.children}
       </div>
     </div>
@@ -24,42 +21,53 @@ class TweetStorm extends React.Component {
 export class Thread extends React.Component {
   constructor(props) { 
     super(props);
+    // may be able to keep the actual Tweet Components in state?
     this.state = {
-        numTweets : 1
+      tweets: [{
+        text: ''
+      }] 
     };
     this.onAddTweet = this.onAddTweet.bind(this);
     this.onDeleteTweet = this.onDeleteTweet.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   onAddTweet() { 
-    this.setState({
-      numTweets : this.state.numTweets + 1
-    });
-    console.log(this.state);
+    var array = this.state.tweets
+    var tweet = {
+      text: ''
+    }
+    array.push(tweet)
+    this.setState({tweets: array})
   }
 
-  onDeleteTweet() {
-    if (this.state.numTweets > 1) {
-      this.setState({
-        numTweets : this.state.numTweets - 1
-      });
-    }
+  onDeleteTweet(index, e) {
+    var array = this.state.tweets
+    array.splice(index, 1);
+    this.setState({tweets: array})
+  }
+
+  handleChange(index, e) {
+    var newTweet = { text: e.target.value }
+    var array = this.state.tweets
+    array.splice(index, 1, newTweet)
+    this.setState({tweets: array});
   }
 
   render() {
-    const tweets = [];
 
-    for (var i = 0; i < this.state.numTweets; i+=1) {
-      tweets.push(<Tweet key= {i} number={i+1} deleteTweet={this.onDeleteTweet} />);
-    };
+    var tweets = this.state.tweets.map((tweet, index) => {
+      return (
+        <Tweet key={index} index={index} deleteTweet={this.onDeleteTweet.bind(this, index)} handleChange={this.handleChange.bind(this, index)} text={tweet.text}/>
+      )
+    })
 
     return (
       <div>
-      <TweetStorm addTweet={this.onAddTweet} deleteTweet={this.onDeleteTweet} numTweets={tweets.length}>
+      <ThreadContainer addTweet={this.onAddTweet} deleteTweet={this.onDeleteTweet.bind(this)} handleChange={this.handleChange.bind(this)}>
         {tweets}
-      </TweetStorm >
+      </ThreadContainer>
       </div>
       );
   }
-
 }
