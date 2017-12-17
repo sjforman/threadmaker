@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { Tweet } from './Tweet';
 
 class ThreadContainer extends React.Component {
@@ -21,15 +22,20 @@ class ThreadContainer extends React.Component {
 export class Thread extends React.Component {
   constructor(props) { 
     super(props);
-    // may be able to keep the actual Tweet Components in state?
     this.state = {
-      tweets: [{
-        text: ''
-      }] 
+      tweets: []
     };
+    this.loadTweetsFromServer = this.loadTweetsFromServer.bind(this);
     this.onAddTweet = this.onAddTweet.bind(this);
     this.onDeleteTweet = this.onDeleteTweet.bind(this);
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  loadTweetsFromServer() {
+    axios.get(this.props.url)
+      .then(res => {
+        this.setState({ tweets: res.data })
+      })
   }
 
   onAddTweet() { 
@@ -52,6 +58,10 @@ export class Thread extends React.Component {
     var array = this.state.tweets
     array.splice(index, 1, newTweet)
     this.setState({tweets: array});
+  }
+  
+  componentDidMount() {
+    this.loadTweetsFromServer();
   }
 
   render() {

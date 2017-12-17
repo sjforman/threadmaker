@@ -3,13 +3,6 @@ import React from 'react';
 var maxLength = 280;
 
 export class Tweet extends React.Component {
-  constructor(props) {
-    super(props);
-  
-  console.log(this.props.handleChange);
-
-}
-
   render() {
 
     return (
