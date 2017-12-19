@@ -38,23 +38,52 @@ export class Thread extends React.Component {
       })
   }
 
+  handleTweetSubmit(index, e) {
+    var newtweet = this.state.tweets[index];
+    var tweetid = this.state.tweets[index]._id;
+    axios.put(`${this.props.url}/${tweetid}`, newtweet)
+       .catch(err => {
+        console.error(err);
+      });
+  }
+
   onAddTweet() { 
     var array = this.state.tweets
-    var tweet = {
+    axios.post(this.props.url, {
       text: ''
-    }
+    })
+    .then(res => {
+      var tweet = {
+        _id: res.data.id,
+        text: ''
+      }
     array.push(tweet)
     this.setState({tweets: array})
+    console.log('Tweet added');
+    })
+    .catch(err => {
+      console.error(err);
+    })
   }
 
   onDeleteTweet(index, e) {
     var array = this.state.tweets
+    var tweetid = this.state.tweets[index]._id;
     array.splice(index, 1);
     this.setState({tweets: array})
+    axios.delete(`${this.props.url}/${tweetid}`)
+      .then(res => {
+        console.log('Tweet deleted');
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }
 
   handleChange(index, e) {
-    var newTweet = { text: e.target.value }
+    var newTweet = { 
+      _id: this.state.tweets[index]._id,
+      text: e.target.value }
     var array = this.state.tweets
     array.splice(index, 1, newTweet)
     this.setState({tweets: array});
@@ -68,13 +97,25 @@ export class Thread extends React.Component {
 
     var tweets = this.state.tweets.map((tweet, index) => {
       return (
-        <Tweet key={index} index={index} deleteTweet={this.onDeleteTweet.bind(this, index)} handleChange={this.handleChange.bind(this, index)} text={tweet.text}/>
+        <Tweet 
+        // getting warning in React because when I add a new Tweet
+        // tweet._id is not yet defined...why is that?
+          key={tweet._id} 
+          id={tweet._id}
+          index={index} 
+          deleteTweet={this.onDeleteTweet.bind(this, index)} 
+          handleChange={this.handleChange.bind(this, index)} 
+          handleTweetSubmit={this.handleTweetSubmit.bind(this, index)}
+          text={tweet.text}/>
       )
     })
 
     return (
       <div>
-      <ThreadContainer addTweet={this.onAddTweet} deleteTweet={this.onDeleteTweet.bind(this)} handleChange={this.handleChange.bind(this)}>
+      <ThreadContainer 
+        addTweet={this.onAddTweet} 
+        deleteTweet={this.onDeleteTweet.bind(this)} 
+        handleChange={this.handleChange.bind(this)}>
         {tweets}
       </ThreadContainer>
       </div>

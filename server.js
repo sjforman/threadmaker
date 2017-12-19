@@ -1,4 +1,4 @@
-//server.js
+  //server.js
 'use strict'
 
 var express = require('express');
@@ -42,13 +42,37 @@ router.route('/tweets')
   .post(function(req, res) {
     var tweet = new Tweet();
     tweet.text = req.body.text;
-
-    tweet.save(function(err) {
+    tweet.id = req.body._id;
+    tweet.save(function(err, tweet) {
       if (err)
         res.send(err);
-        res.json({ message: 'Tweet successfully added!' });
+        res.json({ 
+          id: tweet.id,
+          message: 'Tweet successfully added!' 
+        });
       });
     })
+
+router.route('/tweets/:tweet_id')
+  .put(function(req, res) {
+    Tweet.findById(req.params.tweet_id, function(err, tweet) {
+      if (err)
+        res.send(err);
+      (req.body.text) ? tweet.text = req.body.text : null;
+      tweet.save(function(err) {
+        if (err)
+          res.send(err);
+        res.json({ message: 'Tweet has been updated' });
+      });
+    });
+  })
+  .delete(function(req, res) {
+    Tweet.remove({_id: req.params.tweet_id}, function (err, tweet) {
+      if (err)
+        res.send(err);
+      res.json({ message: 'Tweet has been deleted' })
+    })
+  });
 
 //Use our router configuration when we call /api
 app.use('/api', router);
