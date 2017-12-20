@@ -98,8 +98,6 @@ export class Thread extends React.Component {
     var tweets = this.state.tweets.map((tweet, index) => {
       return (
         <Tweet 
-        // getting warning in React because when I add a new Tweet
-        // tweet._id is not yet defined...why is that?
           key={tweet._id} 
           id={tweet._id}
           index={index} 
