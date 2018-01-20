@@ -4,7 +4,8 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
-var Tweet = require('./model/tweetstorm');
+var Tweet = require('./model/tweet');
+var Thread = require('./model/thread');
 
 var app = express();
 var router = express.Router();
@@ -34,9 +35,12 @@ router.get('/', function(req, res) {
 router.route('/tweets')
   .get(function(req, res) {
     Tweet.find(function(err, tweets) {
-      if (err)
+      if (err) {
         res.send(err);
-      res.json(tweets)
+      }
+      else {
+        res.json(tweets)
+      }
     });
   })
   .post(function(req, res) {
@@ -44,33 +48,74 @@ router.route('/tweets')
     tweet.text = req.body.text;
     tweet.id = req.body._id;
     tweet.save(function(err, tweet) {
-      if (err)
+      if (err) {
         res.send(err);
-        res.json({ 
-          id: tweet.id,
-          message: 'Tweet successfully added!' 
-        });
+      }
+      else {
+          res.json({ 
+            id: tweet.id,
+            message: 'Tweet successfully added!' 
+          });
+        }
       });
     })
+
+router.route('/threads')
+  .get(function(req, res) {
+    Thread.find(function(err, threads) {
+      if (err) {
+        console.log('error in finding threads');
+        res.send(err);
+      }
+      else {
+        res.json(threads)
+      }
+    });
+  })
+  .post(function(req, res) {
+    var thread = new Thread();
+    thread.text = req.body.text;
+    thread.id = req.body._id;
+    thread.save(function(err, thread) {
+      if (err) {
+        res.send(err);
+      }
+      else {
+        res.json({
+          id: thread.id,
+          message: 'Thread successfully added!'
+        });
+      }
+    });
+  })
 
 router.route('/tweets/:tweet_id')
   .put(function(req, res) {
     Tweet.findById(req.params.tweet_id, function(err, tweet) {
-      if (err)
-        res.send(err);
-      (req.body.text) ? tweet.text = req.body.text : null;
-      tweet.save(function(err) {
-        if (err)
+        if (err) {
           res.send(err);
-        res.json({ message: 'Tweet has been updated' });
+        }
+        else {
+          (req.body.text) ? tweet.text = req.body.text : null;
+          tweet.save(function(err) {
+            if (err) {
+              res.send(err);
+            }
+            else {
+              res.json({ message: 'Tweet has been updated' });
+            }
+          });
+        }
       });
-    });
-  })
+    })
   .delete(function(req, res) {
     Tweet.remove({_id: req.params.tweet_id}, function (err, tweet) {
-      if (err)
+      if (err) {
         res.send(err);
-      res.json({ message: 'Tweet has been deleted' })
+      }
+      else {
+        res.json({ message: 'Tweet has been deleted' })
+      }
     })
   });
 

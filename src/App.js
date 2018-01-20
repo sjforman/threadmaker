@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
+import { ThreadList } from './ThreadList';
 import { Thread } from './Thread';
 
 class App extends Component {
@@ -12,6 +13,10 @@ class App extends Component {
         </header>
         <Thread
           url='http://localhost:3001/api/tweets'
+          pollInterval={2000}
+        />
+        <ThreadList
+          url='http://localhost:3001/api/threads'
           pollInterval={2000}
         />
       </div>
