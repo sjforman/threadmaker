@@ -8,7 +8,7 @@ class ThreadListContainer extends React.Component {
     <div>
       <div id="buttons" className="tc mb4">
         <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 mr1 dib mid-gray" href="#" onClick={this.props.addThread}>
-        +
+        New Thread
         </button>
       </div>
       <div>

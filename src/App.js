@@ -11,10 +11,6 @@ class App extends Component {
           <img src={logo} className="w3 mt3" alt="logo" />
           <h1 className="tc">Tweetstormer</h1>
         </header>
-        <Thread
-          url='http://localhost:3001/api/tweets'
-          pollInterval={2000}
-        />
         <ThreadList
           url='http://localhost:3001/api/threads'
           pollInterval={2000}

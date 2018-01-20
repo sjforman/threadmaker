@@ -32,6 +32,36 @@ router.get('/', function(req, res) {
   res.json({ message: 'API Initialized!'});
 });
 
+router.route('/threads')
+  .get(function(req, res) {
+    Thread.find(function(err, threads) {
+      if (err) {
+        console.log('error in finding threads');
+        res.send(err);
+      }
+      else {
+        res.json(threads)
+      }
+    });
+  })
+  .post(function(req, res) {
+    var thread = new Thread();
+    thread.text = req.body.text;
+    thread.id = req.body._id;
+    thread.save(function(err, thread) {
+      if (err) {
+        res.send(err);
+      }
+      else {
+        res.json({
+          id: thread.id,
+          message: 'Thread successfully added!'
+        });
+      }
+    });
+  })
+
+
 router.route('/tweets')
   .get(function(req, res) {
     Tweet.find(function(err, tweets) {
@@ -60,33 +90,27 @@ router.route('/tweets')
       });
     })
 
-router.route('/threads')
+router.route('/thread/:thread_id')
   .get(function(req, res) {
-    Thread.find(function(err, threads) {
+    console.log(req.params.thread_id);
+    Thread.findById(req.params.thread_id, function(err, thread) {
       if (err) {
-        console.log('error in finding threads');
         res.send(err);
       }
       else {
-        res.json(threads)
+        res.json(thread)
       }
     });
   })
-  .post(function(req, res) {
-    var thread = new Thread();
-    thread.text = req.body.text;
-    thread.id = req.body._id;
-    thread.save(function(err, thread) {
+  .delete(function(req, res) {
+    Thread.remove({_id: req.params.thread_id}, function (err, thread) {
       if (err) {
         res.send(err);
       }
       else {
-        res.json({
-          id: thread.id,
-          message: 'Thread successfully added!'
-        });
+        res.json({ message: 'Thread has been deleted' })
       }
-    });
+    })
   })
 
 router.route('/tweets/:tweet_id')
