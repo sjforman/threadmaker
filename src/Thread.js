@@ -32,6 +32,7 @@ export class Thread extends React.Component {
   }
 
   loadTweetsFromServer() {
+    console.log(this.props.route)
     axios.get(this.props.url)
       .then(res => {
         this.setState({ tweets: res.data })
