@@ -27,6 +27,7 @@ export class ThreadList extends React.Component {
     };
     this.loadThreadsFromServer = this.loadThreadsFromServer.bind(this);
     this.onAddThread = this.onAddThread.bind(this);
+    this.onDeleteThread = this.onDeleteThread.bind(this);
   }
 
   loadThreadsFromServer() {
@@ -54,6 +55,20 @@ export class ThreadList extends React.Component {
       console.error(err);
     })
   }
+
+  onDeleteThread(index, e) {
+    var array = this.state.threads
+    var threadid = this.state.threads[index]._id;
+    array.splice(index, 1);
+    this.setState({threads: array})
+    axios.delete(`${this.props.url}/${threadid}`)
+      .then(res => {
+        console.log('Thread deleted');
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
   
   componentDidMount() {
     this.loadThreadsFromServer();
@@ -67,14 +82,16 @@ export class ThreadList extends React.Component {
           key={thread._id} 
           id={thread._id}
           index={index} 
-          text={thread.text}/>
+          text={thread.text}
+          deleteThread={this.onDeleteThread.bind(this, index)}/>
       )
     })
 
     return (
       <div>
       <ThreadListContainer
-        addThread={this.onAddThread}>
+        addThread={this.onAddThread}
+        deleteThread={this.onDeleteThread.bind(this)}>
         {threads}
       </ThreadListContainer>
       </div>
