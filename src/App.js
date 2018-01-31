@@ -6,7 +6,7 @@ import { Thread } from './Thread';
 
 class ThreadParent extends Component {
   render() {
-    return <Thread url='http://localhost:3001/api/tweets' pollInterval={2000}/>
+    return <Thread url='http://localhost:3001/api/threads' pollInterval={2000} routeParams={this.props.routeparams}/>
   }
 }
 
@@ -30,11 +30,10 @@ class App extends Component {
         <ul>
           <li><Link to="/">Home</Link></li>
           <li><Link to="/threads">Threads</Link></li>
-          <li><Link to="/tweets">Tweets</Link></li>
         </ul>
 
       <Route path="/threads" component={ThreadListParent}/>
-      <Route path="/tweets" component={ThreadParent}/>
+      <Route path="/thread/:thread_id" component={ThreadParent}/>
       </div>
     </Router>
     );

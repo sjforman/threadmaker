@@ -46,7 +46,6 @@ router.route('/threads')
   })
   .post(function(req, res) {
     var thread = new Thread();
-    thread.text = req.body.text;
     thread.id = req.body._id;
     thread.save(function(err, thread) {
       if (err) {
@@ -90,6 +89,56 @@ router.route('/tweets')
       });
     })
 
+router.route('/threads/:thread_id/:tweet_id')
+  .get(function(req, res) {
+    Thread.findById(req.params.thread_id, function(err, thread) {
+      if (err) {
+        res.send(err);
+      }
+      else {
+        res.json(thread)
+      }
+    });
+  })
+  .put(function(req, res) {
+    Thread.findById(req.params.thread_id, function(err, thread) {
+      if (err) {
+        res.send(err);
+      }
+      else {
+        var tweet = thread.tweets.id(req.params.tweet_id);
+        (req.body.text) ? tweet.text = req.body.text : null;
+          thread.save(function(err) {
+            if (err) {
+              res.send(err);
+            }
+            else {
+              res.json({ message: 'Tweet has been updated.'  });
+            }
+          });
+        }
+      });
+    })
+  .delete(function(req, res) {
+    Thread.findById(req.params.thread_id, function(err, thread) {
+    if (err) {
+      res.send(err);
+    }
+    else {
+      var tweet = thread.tweets.id(req.params.tweet_id);
+      tweet.remove();
+      thread.save(function(err) {
+          if (err) {
+            res.send(err);
+          }
+          else {
+            res.json({ message: 'Tweet successfully deleted from thread' });
+          }
+        });
+      }
+    });
+  });
+
 router.route('/threads/:thread_id')
   .get(function(req, res) {
     console.log(req.params.thread_id);
@@ -98,7 +147,30 @@ router.route('/threads/:thread_id')
         res.send(err);
       }
       else {
-        res.json(thread)
+        res.json(thread);
+      }
+    });
+  })
+  .post(function(req, res) {
+    Thread.findById(req.params.thread_id, function(err, thread) {
+      if (err) {
+        res.send(err);
+      }
+      else {
+        var tweet = new Tweet();
+        thread.tweets.push({text: ''});
+        thread.save(function(err) {
+          if (err) {
+            res.send(err)
+          }
+          else {
+            res.json({
+              thread: thread,
+              tweet_id: tweet.id,
+              message: 'Tweet successfully added to thread.'
+            });
+          }
+        });
       }
     });
   })
@@ -114,34 +186,6 @@ router.route('/threads/:thread_id')
   })
 
 router.route('/tweets/:tweet_id')
-  .put(function(req, res) {
-    Tweet.findById(req.params.tweet_id, function(err, tweet) {
-        if (err) {
-          res.send(err);
-        }
-        else {
-          (req.body.text) ? tweet.text = req.body.text : null;
-          tweet.save(function(err) {
-            if (err) {
-              res.send(err);
-            }
-            else {
-              res.json({ message: 'Tweet has been updated' });
-            }
-          });
-        }
-      });
-    })
-  .delete(function(req, res) {
-    Tweet.remove({_id: req.params.tweet_id}, function (err, tweet) {
-      if (err) {
-        res.send(err);
-      }
-      else {
-        res.json({ message: 'Tweet has been deleted' })
-      }
-    })
-  });
 
 //Use our router configuration when we call /api
 app.use('/api', router);

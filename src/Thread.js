@@ -2,8 +2,11 @@ import React from 'react';
 import axios from 'axios';
 import { Tweet } from './Tweet';
 
+let thread_id='5a712378dcff1d520d69cd10';
+
 class ThreadContainer extends React.Component {
   render() {
+    //console.log(this.props.routeParams);
     return (
     <div>
       <div id="buttons" className="tc mb4">
@@ -32,17 +35,20 @@ export class Thread extends React.Component {
   }
 
   loadTweetsFromServer() {
-    console.log(this.props.route)
-    axios.get(this.props.url)
+    // TODO: access thread_id from the parent component in the Express router component
+    axios.get(`${this.props.url}/${thread_id}`)
       .then(res => {
-        this.setState({ tweets: res.data })
+        this.setState({ tweets: res.data.tweets })
+      })
+      .catch(err => {
+        console.error(err);
       })
   }
 
   handleTweetSubmit(index, e) {
     var newtweet = this.state.tweets[index];
     var tweetid = this.state.tweets[index]._id;
-    axios.put(`${this.props.url}/${tweetid}`, newtweet)
+    axios.put(`${this.props.url}/${thread_id}/${tweetid}`, newtweet)
        .catch(err => {
         console.error(err);
       });
@@ -50,12 +56,12 @@ export class Thread extends React.Component {
 
   onAddTweet() { 
     var array = this.state.tweets
-    axios.post(this.props.url, {
+    axios.post(`${this.props.url}/{thread_id}`, {
       text: ''
     })
     .then(res => {
       var tweet = {
-        _id: res.data.id,
+        _id: res.tweet_id,
         text: ''
       }
     array.push(tweet)
@@ -72,7 +78,7 @@ export class Thread extends React.Component {
     var tweetid = this.state.tweets[index]._id;
     array.splice(index, 1);
     this.setState({tweets: array})
-    axios.delete(`${this.props.url}/${tweetid}`)
+    axios.delete(`${this.props.url}/${thread_id}/${tweetid}`)
       .then(res => {
         console.log('Tweet deleted');
       })
