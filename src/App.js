@@ -6,7 +6,7 @@ import { Thread } from './Thread';
 
 class ThreadParent extends Component {
   render() {
-    return <Thread url='http://localhost:3001/api/threads' pollInterval={2000} routeParams={this.props.routeparams}/>
+    return <Thread url='http://localhost:3001/api/threads' pollInterval={2000} thread_id={this.props.match.params.thread_id}/>
   }
 }
 

@@ -141,7 +141,6 @@ router.route('/threads/:thread_id/:tweet_id')
 
 router.route('/threads/:thread_id')
   .get(function(req, res) {
-    console.log(req.params.thread_id);
     Thread.findById(req.params.thread_id, function(err, thread) {
       if (err) {
         res.send(err);
