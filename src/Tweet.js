@@ -6,7 +6,7 @@ export class Tweet extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      editMode: true 
+      editMode: false 
     }
     this.toggleEditMode = this.toggleEditMode.bind(this);
   }

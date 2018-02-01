@@ -125,6 +125,8 @@ router.route('/threads/:thread_id/:tweet_id')
       res.send(err);
     }
     else {
+      console.log('The thread returned by mongoose is: ' + thread);
+      console.log('Req.parms is: ' + req.params.tweet_id);
       var tweet = thread.tweets.id(req.params.tweet_id);
       tweet.remove();
       thread.save(function(err) {
@@ -157,7 +159,10 @@ router.route('/threads/:thread_id')
       }
       else {
         var tweet = new Tweet();
-        thread.tweets.push({text: ''});
+        tweet.text = '';
+        console.log('\n' + 'The new tweet is: ' + tweet + '\n');
+        thread.tweets.push(tweet);
+        console.log('\n' + 'Now the thread is: ' + thread.tweets + '\n');
         thread.save(function(err) {
           if (err) {
             res.send(err)
