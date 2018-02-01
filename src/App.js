@@ -24,15 +24,12 @@ class App extends Component {
         <div>
         <header className="tc">
           <img src={logo} className="w3 mt3" alt="logo" />
-          <h1 className="tc">Tweetstormer</h1>
+          <Link to="/">
+            <h1 className="tc">Threadbuilder</h1>
+          </Link>
         </header>
 
-        <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/threads">Threads</Link></li>
-        </ul>
-
-      <Route path="/threads" component={ThreadListParent}/>
+      <Route exact path="/" component={ThreadListParent}/>
       <Route path="/thread/:thread_id" component={ThreadParent}/>
       </div>
     </Router>
