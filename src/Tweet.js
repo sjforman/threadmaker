@@ -41,7 +41,6 @@ export class Tweet extends React.Component {
       <div className="mw9 center ph3-ns mb3 bb">
         <div className="cf ph2-ns">
           <div className="fl w-100 w-10-ns pa2">
-            <h3>{this.props.index + 1}</h3>
           </div>
 
       <div className="fl w-100 w-80-ns pa2">
@@ -54,19 +53,19 @@ export class Tweet extends React.Component {
                   onChange={this.props.handleChange} 
                   onKeyDown={this.escFunction}
                 />
-                <p>{this.props.text.length} / {maxLength} ({maxLength - this.props.text.length} remaining)</p>
               </div>
 
           :
 
-            <div className="w-100 f3 db border-box hover-black b--black-20 pa2 br2 mb2 h4" onClick={this.enterEditMode}>
+            <div className="w-100 f3 db border-box hover-black bl b--black-20 pa2 mb2 h4" onClick={this.enterEditMode}>
               {this.props.text}
             </div>
         }
       </div>
 
         <div className="fl w-100 w-10-ns pa2">
-          <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 dib mid-gray" onClick={this.props.deleteTweet.bind(this)}>Delete</button>
+          <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 dib mid-gray" onClick={this.props.deleteTweet.bind(this)}>-</button>
+          <p>{this.props.text.length} / {maxLength}</p>
         </div>
       </div>
       </div>

@@ -24,8 +24,9 @@ class App extends Component {
         <div>
         <header className="tc">
           <img src={logo} className="w3 mt3" alt="logo" />
+          <h1 className="tc">Threadbuilder</h1>
           <Link to="/">
-            <h1 className="tc">Threadbuilder</h1>
+            <p className="link">Threads</p>
           </Link>
         </header>
 
