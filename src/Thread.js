@@ -35,7 +35,6 @@ export class Thread extends React.Component {
     var threadid = this.props.thread_id;
     axios.get(`${this.props.url}/${threadid}`)
       .then(res => {
-        console.log(res.data.tweets);
         this.setState({ tweets: res.data.tweets })
       })
       .catch(err => {
@@ -59,7 +58,6 @@ export class Thread extends React.Component {
     axios.post(`${this.props.url}/${threadid}`, {
     })
     .then(res => {
-      console.log(res.data);
       var tweet = {
         _id: res.data.tweet_id,
         key: res.data.tweet_id,
@@ -67,7 +65,7 @@ export class Thread extends React.Component {
       }
       array.push(tweet)
       this.setState({tweets: array})
-      console.log('Tweet added: ' + tweet.key);
+      console.log('Tweet added: ' + JSON.stringify(tweet));
     })
     .catch(err => {
       console.error(err);
@@ -77,14 +75,13 @@ export class Thread extends React.Component {
   onDeleteTweet(index, e) {
     var threadid = this.props.thread_id;
     var array = this.state.tweets;
-    console.log('State before deleting is: ' + array);
     var tweetid = this.state.tweets[index]._id;
-    console.log('Trying to delete tweet: ' + tweetid);
+    console.log('Deleting tweet: ' + JSON.stringify(array[index]));
     array.splice(index, 1);
     this.setState({tweets: array})
     axios.delete(`${this.props.url}/${threadid}/${tweetid}`)
       .then(res => {
-        console.log('Tweet deleted');
+        console.log('Tweet deleted: ' + JSON.stringify(tweetid));
       })
       .catch(err => {
         console.error(err);

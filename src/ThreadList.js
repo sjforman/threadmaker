@@ -40,16 +40,14 @@ export class ThreadList extends React.Component {
   onAddThread() {
     var array = this.state.threads
     axios.post(this.props.url, {
-      text: ''
     })
     .then(res => {
       var thread = {
         _id: res.data.id,
-        text: ''
       }
     array.push(thread)
     this.setState({threads: array})
-    console.log('Thread added');
+    console.log('Thread added: ' + JSON.stringify(thread));
     })
     .catch(err => {
       console.error(err);
@@ -63,7 +61,7 @@ export class ThreadList extends React.Component {
     this.setState({threads: array})
     axios.delete(`${this.props.url}/${threadid}`)
       .then(res => {
-        console.log('Thread deleted');
+        console.log('Thread deleted: ' + JSON.stringify(threadid));
       })
       .catch(err => {
         console.error(err);
