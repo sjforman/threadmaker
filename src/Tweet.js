@@ -10,7 +10,6 @@ export class Tweet extends React.Component {
     }
     this.enterEditMode = this.enterEditMode.bind(this);
     this.escFunction = this.escFunction.bind(this);
-    this.spaceFunction = this.spaceFunction.bind(this);
   }
   
   escFunction(event){
@@ -22,14 +21,6 @@ export class Tweet extends React.Component {
     }
   }
 
-  spaceFunction(event){
-    if(event.keyCode === 32) {
-      this.setState({
-        editMode : true
-      });
-    }
-  }
-
   enterEditMode() {
     this.setState({
       editMode : true
@@ -38,12 +29,10 @@ export class Tweet extends React.Component {
 
   componentDidMount() {
     document.addEventListener("keydown", this.escFunction, false);
-    document.addEventListener("keydown", this.spaceFunction, false);
   }
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this.escFunction, false);
-    document.removeEventListener("keydown", this.spaceFunction, false);
   }
 
   render() {
@@ -70,7 +59,7 @@ export class Tweet extends React.Component {
 
           :
 
-            <div className="w-100 f3 db border-box hover-black b--black-20 pa2 br2 mb2 h4" onClick={this.enterEditMode} onKeyDown={this.spaceFunction} tabIndex="0">
+            <div className="w-100 f3 db border-box hover-black b--black-20 pa2 br2 mb2 h4" onClick={this.enterEditMode}>
               {this.props.text}
             </div>
         }
