@@ -44,6 +44,7 @@ export class ThreadList extends React.Component {
     .then(res => {
       var thread = {
         _id: res.data.id,
+        tweets: []
       }
     array.push(thread)
     this.setState({threads: array})
@@ -81,6 +82,7 @@ export class ThreadList extends React.Component {
           id={thread._id}
           index={index} 
           text={thread.text}
+          numTweets={thread.tweets.length || 0}
           deleteThread={this.onDeleteThread.bind(this, index)}/>
       )
     })
