@@ -8,8 +8,15 @@ class ThreadContainer extends React.Component {
     <div>
       <div id="buttons" className="tc mb4">
         <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 mr1 dib mid-gray" href="#" onClick={this.props.addTweet}>
-        +
+        Add tweet
         </button>
+        <label>
+        Character limit:
+        <select defaultValue={this.props.characterLimit} onChange={this.props.handleCharacterLimitChange}>
+          <option value="140">140</option>
+          <option value="280">280</option>
+        </select>
+      </label>
       </div>
       <div>
         {this.props.children}
@@ -23,12 +30,19 @@ export class Thread extends React.Component {
   constructor(props) { 
     super(props);
     this.state = {
+      characterLimit: '280',
       tweets: []
     };
+
+    this.handleCharacterLimitChange = this.handleCharacterLimitChange.bind(this);
     this.loadTweetsFromServer = this.loadTweetsFromServer.bind(this);
     this.onAddTweet = this.onAddTweet.bind(this);
     this.onDeleteTweet = this.onDeleteTweet.bind(this);
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleCharacterLimitChange(event){
+    this.setState({characterLimit: event.target.value})
   }
 
   loadTweetsFromServer() {
@@ -112,6 +126,7 @@ export class Thread extends React.Component {
           deleteTweet={this.onDeleteTweet.bind(this, index)} 
           handleChange={this.handleChange.bind(this, index)} 
           handleTweetSubmit={this.handleTweetSubmit.bind(this, index)}
+          characterLimit={this.state.characterLimit}
           text={tweet.text}/>
       )
     })
@@ -121,7 +136,9 @@ export class Thread extends React.Component {
       <ThreadContainer 
         addTweet={this.onAddTweet} 
         deleteTweet={this.onDeleteTweet.bind(this)} 
-        handleChange={this.handleChange.bind(this)}>
+        handleChange={this.handleChange.bind(this)}
+        handleCharacterLimitChange={this.handleCharacterLimitChange.bind(this)}
+        characterLimit={this.state.characterLimit}>
         {tweets}
       </ThreadContainer>
       </div>

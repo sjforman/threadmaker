@@ -1,7 +1,5 @@
 import React from 'react';
 
-var maxLength = 280;
-
 export class Tweet extends React.Component {
   constructor(props) {
     super(props);
@@ -35,6 +33,7 @@ export class Tweet extends React.Component {
     document.removeEventListener("keydown", this.escFunction, false);
   }
 
+
   render() {
 
     return (
@@ -43,12 +42,13 @@ export class Tweet extends React.Component {
           <div className="fl w-100 w-10-ns pa2">
           </div>
 
+      {/* TODO: How do I preserve line breaks in the original input when they're rendered in final mode? */}
       <div className="fl w-100 w-80-ns pa2">
         {this.state.editMode ? 
 
               <div>
                 <textarea 
-                  className="w-100 f3 db border-box hover-black ba b--black-20 pa2 br2 mb2 h4" 
+                  className="w-100 f3 db border-box hover-black ba b--black-20 pa2 br2 mb2 h5"
                   value={this.props.text} 
                   onChange={this.props.handleChange} 
                   onKeyDown={this.escFunction}
@@ -57,7 +57,7 @@ export class Tweet extends React.Component {
 
           :
 
-            <div className="w-100 f3 db border-box hover-black bl b--black-20 pa2 mb2 h4" onClick={this.enterEditMode}>
+            <div className="w-100 f3 db border-box hover-black bl b--black-20 pa2 mb2 h5" onClick={this.enterEditMode}>
               {this.props.text}
             </div>
         }
@@ -65,7 +65,7 @@ export class Tweet extends React.Component {
 
         <div className="fl w-100 w-10-ns pa2">
           <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 dib mid-gray" onClick={this.props.deleteTweet.bind(this)}>-</button>
-          <p>{this.props.text.length} / {maxLength}</p>
+          <p>{this.props.text.length} / {this.props.characterLimit}</p>
         </div>
       </div>
       </div>
