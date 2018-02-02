@@ -8,6 +8,7 @@ export class Tweet extends React.Component {
     }
     this.enterEditMode = this.enterEditMode.bind(this);
     this.escFunction = this.escFunction.bind(this);
+    this.formatText = this.formatText.bind(this);
   }
   
   escFunction(event){
@@ -17,6 +18,14 @@ export class Tweet extends React.Component {
       });
       this.props.handleTweetSubmit()
     }
+  }
+  
+  formatText() {
+    var extraText = '';
+    if (this.props.text.length > this.props.characterLimit) {
+      extraText = this.props.text.substring(this.props.characterLimit)
+    }
+    console.log(extraText);
   }
 
   enterEditMode() {
@@ -35,14 +44,15 @@ export class Tweet extends React.Component {
 
 
   render() {
+    this.formatText()
 
     return (
+
       <div className="mw9 center ph3-ns mb3 bb">
         <div className="cf ph2-ns">
-          <div className="fl w-100 w-10-ns pa2">
-          </div>
 
       {/* TODO: How do I preserve line breaks in the original input when they're rendered in final mode? */}
+      {/* TODO: Tweet content in both modes should probably be encapsulated in component(s)? */}
       <div className="fl w-100 w-80-ns pa2">
         {this.state.editMode ? 
 
@@ -57,7 +67,8 @@ export class Tweet extends React.Component {
 
           :
 
-            <div className="w-100 f3 db border-box hover-black bl b--black-20 pa2 mb2 h5" onClick={this.enterEditMode}>
+            <div className="w-100 f3 db border-box hover-black bl b--black-20 pa2 mb2 h5" 
+              onClick={this.enterEditMode}>
               {this.props.text}
             </div>
         }
