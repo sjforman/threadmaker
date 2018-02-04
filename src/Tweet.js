@@ -58,7 +58,7 @@ export class Tweet extends React.Component {
 
               <div>
                 <textarea 
-                  className="w-100 f3 db border-box hover-black ba b--black-20 pa2 br2 mb2 h5"
+                  className="w-100 f3 db border-box hover-black ba b--black-20 pa2 br2 mb2 h4"
                   value={this.props.text} 
                   onChange={this.props.handleChange} 
                   onKeyDown={this.escFunction}
@@ -67,7 +67,7 @@ export class Tweet extends React.Component {
 
           :
 
-            <div className="w-100 f3 db border-box hover-black bl b--black-20 pa2 mb2 h5" 
+            <div className="w-100 f3 db border-box hover-black bl b--black-20 pa2 mb2 h4" 
               onClick={this.enterEditMode}>
               {this.props.text}
             </div>
