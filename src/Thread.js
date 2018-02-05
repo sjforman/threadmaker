@@ -56,6 +56,9 @@ export class Thread extends React.Component {
       })
   }
 
+  /* TODO: Bug: if you delete all the text from a tweet, you can't save it
+   * empty. */
+
   handleTweetSubmit(index, e) {
     var threadid = this.props.thread_id;
     var newtweet = this.state.tweets[index];

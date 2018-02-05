@@ -1,5 +1,19 @@
 import React from 'react';
 
+class CharacterCounter extends React.Component {
+  render() {
+
+    let over = false;
+    if (this.props.text.length > this.props.characterLimit) {
+      over = true;
+    }
+
+    return(
+      <p className={over ? "red" : ""}>{this.props.text.length} / {this.props.characterLimit}</p>
+    )
+  }
+}
+
 export class Tweet extends React.Component {
   constructor(props) {
     super(props);
@@ -8,7 +22,6 @@ export class Tweet extends React.Component {
     }
     this.enterEditMode = this.enterEditMode.bind(this);
     this.escFunction = this.escFunction.bind(this);
-    this.formatText = this.formatText.bind(this);
   }
   
   escFunction(event){
@@ -20,14 +33,6 @@ export class Tweet extends React.Component {
     }
   }
   
-  formatText() {
-    var extraText = '';
-    if (this.props.text.length > this.props.characterLimit) {
-      extraText = this.props.text.substring(this.props.characterLimit)
-    }
-    console.log(extraText);
-  }
-
   enterEditMode() {
     this.setState({
       editMode : true
@@ -44,7 +49,6 @@ export class Tweet extends React.Component {
 
 
   render() {
-    this.formatText()
 
     return (
 
@@ -75,8 +79,10 @@ export class Tweet extends React.Component {
       </div>
 
         <div className="fl w-100 w-10-ns pa2">
-          <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 dib mid-gray" onClick={this.props.deleteTweet.bind(this)}>-</button>
-          <p>{this.props.text.length} / {this.props.characterLimit}</p>
+          <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 dib mid-gray" onClick={this.props.deleteTweet.bind(this)}>
+            Delete tweet
+          </button>
+          <CharacterCounter text={this.props.text} characterLimit={this.props.characterLimit} />
         </div>
       </div>
       </div>
