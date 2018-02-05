@@ -81,9 +81,8 @@ export class ThreadList extends React.Component {
           key={thread._id} 
           id={thread._id}
           index={index} 
-          text={thread.text}
+          tweets={thread.tweets}
           numTweets={thread.tweets.length || 0}
-          firstTweet={thread.tweets[0].text.substring(0, 40)}
           deleteThread={this.onDeleteThread.bind(this, index)}/>
       )
     })

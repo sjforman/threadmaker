@@ -4,17 +4,33 @@ export class ThreadSummary extends React.Component {
   render() {
 
     const threadlink = '/thread/' + this.props.id;
+    var tweetsPresent = false;
+    var firstTweet = '';
+
+    if (this.props.tweets.length > 0) {
+      tweetsPresent = true;
+      firstTweet = this.props.tweets[0].text.slice(0,80) + '...';
+    }
+    else {
+      tweetsPresent = false;
+    }
 
     return (
       <div className="mw9 center ph3-ns mb3 bb">
         <div className="cf ph2-ns">
-          <div className="fl w-100 pa2">
-            <a className="link" href={threadlink}>{this.props.id}</a>
-            <p>{this.props.numTweets} tweets</p>
-            <p>1/ {this.props.firstTweet}</p>
-            <p>...</p>
+          <div className="fl w-20 pa2">
+            <a className="link" href={threadlink}>
+              <p>{this.props.numTweets} tweets</p>
+            </a>
+          </div>
+          <div className="fl w-60 pa2">
+            {tweetsPresent && 
+            <p>{firstTweet}</p>
+            }
+          </div>
+          <div className="fl w-20 pa4">
             <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 mr1 dib mid-gray" href="#" onClick={this.props.deleteThread.bind(this)}>
-            delete
+            delete thread
             </button>
           </div>
         </div>
