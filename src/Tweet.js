@@ -55,6 +55,10 @@ export class Tweet extends React.Component {
       <div className="mw9 center ph3-ns mb3 bb">
         <div className="cf ph2-ns">
 
+      <div className="fl w-100 w-10-ns pa2">
+        <button className="f6 link dim br1 ba bw1 ph2 pv2 mb2 dib mid-gray" onClick={this.props.moveTweetUp.bind(this)}>move up</button>
+        <button className="f6 link dim br1 ba bw1 ph2 pv2 mb2 dib mid-gray" onClick={this.props.moveTweetDown.bind(this)}>move down</button>
+      </div>
       {/* TODO: How do I preserve line breaks in the original input when they're rendered in final mode? */}
       {/* TODO: Tweet content in both modes should probably be encapsulated in component(s)? */}
       <div className="fl w-100 w-80-ns pa2">
@@ -79,6 +83,7 @@ export class Tweet extends React.Component {
       </div>
 
         <div className="fl w-100 w-10-ns pa2">
+          {/* TODO: add confirmation step for deleting Tweet */}
           <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 dib mid-gray" onClick={this.props.deleteTweet.bind(this)}>
             Delete tweet
           </button>

@@ -38,7 +38,10 @@ export class Thread extends React.Component {
     this.loadTweetsFromServer = this.loadTweetsFromServer.bind(this);
     this.onAddTweet = this.onAddTweet.bind(this);
     this.onDeleteTweet = this.onDeleteTweet.bind(this);
+    /* TODO: wouldn't a more descriptive name for "handle change" better? */
     this.handleChange = this.handleChange.bind(this);
+    this.moveTweetDown = this.moveTweetDown.bind(this);
+    this.moveTweetUp = this.moveTweetUp.bind(this);
   }
 
   handleCharacterLimitChange(event){
@@ -56,9 +59,8 @@ export class Thread extends React.Component {
       })
   }
 
-  /* TODO: Bug: if you delete all the text from a tweet, you can't save it
+  /* TODO: Bug: currently, if you delete all the text from a tweet, you can't save it
    * empty. */
-
   handleTweetSubmit(index, e) {
     var threadid = this.props.thread_id;
     var newtweet = this.state.tweets[index];
@@ -90,6 +92,9 @@ export class Thread extends React.Component {
   }
 
   onDeleteTweet(index, e) {
+    /* feels wrong to re-declare threadid in each function 
+     * like there should be some way to declare once?
+     * Maybe it should be passed into the function as an argument? */
     var threadid = this.props.thread_id;
     var array = this.state.tweets;
     var tweetid = this.state.tweets[index]._id;
@@ -113,6 +118,34 @@ export class Thread extends React.Component {
     array.splice(index, 1, newTweet)
     this.setState({tweets: array});
   }
+
+  /* Seems like I should be able to parameterize this into a `moveTweet`
+   * function that takes an argument for direction. Tried, but couldn't
+   * figure out how to do that.*/
+
+  moveTweetUp(index, e) {
+    /* TODO: componentize the "up" and "down" buttons 
+     * and have their state depend on their position
+     * so as to disable them rather than allow them to be clicked
+     * when they shouldn't be */
+    if (index > 0) {
+      var array = this.state.tweets;
+      var tweetToMove = array[index];
+      array[index] = array[index - 1];
+      array[index - 1] = tweetToMove;
+      this.setState({tweets: array});
+    }
+  }
+
+  moveTweetDown(index, e) {
+    if (index + 1 < this.state.tweets.length) {
+      var array = this.state.tweets;
+      var tweetToMove = array[index];
+      array[index] = array[index + 1];
+      array[index + 1] = tweetToMove;
+      this.setState({tweets: array});
+    }
+  }
   
   componentDidMount() {
     this.loadTweetsFromServer();
@@ -130,6 +163,8 @@ export class Thread extends React.Component {
           handleChange={this.handleChange.bind(this, index)} 
           handleTweetSubmit={this.handleTweetSubmit.bind(this, index)}
           characterLimit={this.state.characterLimit}
+          moveTweetDown={this.moveTweetDown.bind(this, index)}
+          moveTweetUp={this.moveTweetUp.bind(this, index)}
           text={tweet.text}/>
       )
     })
@@ -141,7 +176,9 @@ export class Thread extends React.Component {
         deleteTweet={this.onDeleteTweet.bind(this)} 
         handleChange={this.handleChange.bind(this)}
         handleCharacterLimitChange={this.handleCharacterLimitChange.bind(this)}
-        characterLimit={this.state.characterLimit}>
+        characterLimit={this.state.characterLimit}
+        moveTweetDown={this.moveTweetDown.bind(this)}
+        moveTweetUp={this.moveTweetUp.bind(this)}>
         {tweets}
       </ThreadContainer>
       </div>
