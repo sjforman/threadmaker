@@ -101,6 +101,8 @@ export class Thread extends React.Component {
     console.log('Deleting tweet: ' + JSON.stringify(array[index]));
     array.splice(index, 1);
     this.setState({tweets: array})
+    /* TODO: would it be better to `put` the thread instead of 
+     * deleting the specific tweet? */
     axios.delete(`${this.props.url}/${threadid}/${tweetid}`)
       .then(res => {
         console.log('Tweet deleted: ' + JSON.stringify(tweetid));
@@ -129,21 +131,31 @@ export class Thread extends React.Component {
      * so as to disable them rather than allow them to be clicked
      * when they shouldn't be */
     if (index > 0) {
+      var threadid = this.props.thread_id;
       var array = this.state.tweets;
       var tweetToMove = array[index];
       array[index] = array[index - 1];
       array[index - 1] = tweetToMove;
       this.setState({tweets: array});
+      axios.put(`${this.props.url}/${threadid}`, array)
+        .catch(err => {
+          console.error(err);
+        });
     }
   }
 
   moveTweetDown(index, e) {
     if (index + 1 < this.state.tweets.length) {
+      var threadid = this.props.thread_id;
       var array = this.state.tweets;
       var tweetToMove = array[index];
       array[index] = array[index + 1];
       array[index + 1] = tweetToMove;
       this.setState({tweets: array});
+      axios.put(`${this.props.url}/${threadid}`, array)
+        .catch(err => {
+          console.error(err);
+        });
     }
   }
   

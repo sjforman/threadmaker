@@ -62,35 +62,6 @@ router.route('/threads')
     });
   })
 
-
-router.route('/tweets')
-  .get(function(req, res) {
-    Tweet.find(function(err, tweets) {
-      if (err) {
-        res.send(err);
-      }
-      else {
-        res.json(tweets)
-      }
-    });
-  })
-  .post(function(req, res) {
-    var tweet = new Tweet();
-    tweet.text = req.body.text;
-    tweet.id = req.body._id;
-    tweet.save(function(err, tweet) {
-      if (err) {
-        res.send(err);
-      }
-      else {
-          res.json({ 
-            id: tweet.id,
-            message: 'Tweet successfully added!' 
-          });
-        }
-      });
-    })
-
 router.route('/threads/:thread_id/:tweet_id')
   .get(function(req, res) {
     Thread.findById(req.params.thread_id, function(err, thread) {
@@ -179,6 +150,24 @@ router.route('/threads/:thread_id')
         });
       }
     });
+  })
+  .put(function(req, res) {
+    Thread.findById(req.params.thread_id, function(err, thread) {
+      if (err) {
+        res.send(err)
+      }
+      else {
+        thread.tweets = req.body;
+        thread.save(function(err) {
+          if (err) {
+            res.send(err);
+          }
+          else {
+            res.json({ message: 'Thread has been updated.'  });
+          }
+        });
+      }
+    })
   })
   .delete(function(req, res) {
     Thread.remove({_id: req.params.thread_id}, function (err, thread) {
