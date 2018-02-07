@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import logo from './logo.svg';
 import { ThreadList } from './ThreadList';
 import { Thread } from './Thread';
+import { Home } from './Home';
 
 class ThreadParent extends Component {
   render() {
@@ -25,12 +26,10 @@ class App extends Component {
         <header className="tc">
           <img src={logo} className="w3 mt3" alt="logo" />
           <h1 className="tc">Threadbuilder</h1>
-          <Link to="/">
-            <p className="link">Threads</p>
-          </Link>
         </header>
 
-      <Route exact path="/" component={ThreadListParent}/>
+      <Route exact path="/" component={Home}/>
+      <Route exact path="/threads" component={ThreadListParent}/>
       <Route path="/thread/:thread_id" component={ThreadParent}/>
       </div>
     </Router>

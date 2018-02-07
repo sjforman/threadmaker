@@ -4,8 +4,10 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
+
 var Tweet = require('./model/tweet');
 var Thread = require('./model/thread');
+var User = require('./model/user');
 
 var app = express();
 var router = express.Router();
@@ -188,8 +190,6 @@ router.route('/threads/:thread_id')
       }
     })
   })
-
-router.route('/tweets/:tweet_id')
 
 //Use our router configuration when we call /api
 app.use('/api', router);
