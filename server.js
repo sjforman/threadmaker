@@ -83,27 +83,31 @@ router.route('/auth/twitter/reverse')
       url: 'https://api.twitter.com/oauth/request_token',
       oauth: {
         oauth_callback: "http%3A%2F%2Flocalhost%3A3000%2Ftwitter-callback",
-        consumerKey: twitterConfig.consumerKey,
-        consumerSecret: twitterConfig.consumerSecret
+        consumer_key: twitterConfig.consumerKey,
+        consumer_secret: twitterConfig.consumerSecret
       }
     }, function (err, r, body) {
       if (err) {
-        return res.send(500, { message: err.message });
+        return res.status(500).send({ message: err.message });
       }
-
-      var jsonStr = '{ "' + body.replace(/&/g, '", "').replace(/=/g, '": "') + '"}';
-      
-      res.send(JSON.parse(jsonStr));
+      else if (r.statusCode === 400) {
+        return res.status(500).send({ message: r.body });
+      }
+      else {
+        var jsonStr = '{ "' + body.replace(/&/g, '", "').replace(/=/g, '": "') + '"}';
+        res.send(JSON.parse(jsonStr));
+      }
     });
   });
 
 router.route('/auth/twitter')
   .post((req, res, next) => {
+    console.log(req.query.oauth_token);
     request.post({
       url: 'https://api.twitter.com/oauth/access_token?oauth_verifier',
       oauth: {
-        consumerKey: twitterConfig.consumerKey,
-        consumerSecret: twitterConfig.consumerSecret,
+        consumer_key: twitterConfig.consumerKey,
+        consumer_secret: twitterConfig.consumerSecret,
         token: req.query.oauth_token
       },
       form: { oauth_verifier: req.query.oauth_verifier }
