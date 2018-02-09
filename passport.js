@@ -1,5 +1,5 @@
 //passport.js
-'use strict'
+'use strict';
 
 var passport = require('passport');
 var TwitterTokenStrategy = require('passport-twitter-token');

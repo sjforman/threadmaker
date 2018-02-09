@@ -1,4 +1,6 @@
 import React from 'react';
+import Twitter from 'twitter';
+
 import TwitterLogin from 'react-twitter-auth/lib/react-twitter-auth-component.js';
 
 export class Home extends React.Component {
@@ -6,8 +8,8 @@ export class Home extends React.Component {
     super(props)
 
     this.state = { isAuthenticated: false, user: null, token: ''};
-  }
 
+  }
 
   onSuccess = (response) => {
     const token = response.headers.get('x-auth-token');
@@ -28,6 +30,22 @@ export class Home extends React.Component {
   }
 
   render() {
+
+    var client = new Twitter({
+      consumer_key: 'Ck9TmlEDgCAhAXnvEPswdiSMg',
+      consumer_secret: 'JMbocRhgIqFMkdGwk5BmrdTdjT1Ec8rduwPlbmj38c4SisqBg8',
+      access_token_key: '9741722-TCF4bquJ2Wtn1hWrHghdVdj7WMW15nz3S2HzSb3oWx',
+      access_token_secret: 'aCvujPnmoDHrH2xBSRqac08uRTKJDCZSl0bQES6RiGNEO'
+    })
+
+    console.log(client);
+
+    client.get('favorites/list', function(error, tweets, response) {
+      if(error) throw error;
+      console.log(tweets);
+      console.log(response);
+    })
+
     let content = !!this.state.isAuthenticated ?
       (
       <div>
