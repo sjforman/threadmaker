@@ -8,20 +8,22 @@ export class Home extends React.Component {
     this.state = { isAuthenticated: false, user: null, token: ''};
   }
 
-  onSuccess(res) {
-    const token = res.headers.get('x-auth-token');
-    res.json().then(user => {
+
+  onSuccess = (response) => {
+    const token = response.headers.get('x-auth-token');
+    response.json().then(user => {
       if (token) {
         this.setState({isAuthenticated: true, user: user, token: token});
       }
+      console.log(this.state);
     })
   }
 
-  onFailure(err) {
-    console.log(err)
+  onFailure = (error) => {
+    console.log(error)
   }
 
-  logout() {
+  logout = () => {
     this.setState({ isAuthenticated: false, user: null, token: ''});
   }
 
@@ -30,7 +32,7 @@ export class Home extends React.Component {
       (
       <div>
         <div>
-          {this.state.user}
+          {this.state.user.id}
         </div>
         <div>
           <button onClick={this.logout} className="button" >
@@ -41,9 +43,9 @@ export class Home extends React.Component {
     ) :
     /* TODO: get API url base and port from props rather than hard-coding */
     (
-      <TwitterLogin loginUrl='http://localhost:3001/auth/twitter'
+      <TwitterLogin loginUrl='http://localhost:3001/api/auth/twitter'
                     onFailure={this.onFailure} onSuccess={this.onSuccess}
-                    requestTokenUrl='http://localhost:3001/auth/twitter/reverse'/>
+                    requestTokenUrl='http://localhost:3001/api/auth/twitter/reverse'/>
     );
 
     return(

@@ -1,9 +1,16 @@
-  //server.js
+ //server.js
 'use strict'
 
 var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
+var passport = require('passport');
+var jwt = require('jsonwebtoken');
+var expressJwt = require('express-jwt');
+var request = require('request');
+var cors = require('cors');
+
+var twitterConfig = require('./twitter.config.js');
 
 var Tweet = require('./model/tweet');
 var Thread = require('./model/thread');
@@ -17,28 +24,118 @@ var port = process.env.API_PORT || 3001;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-//To prevent errors from Cross Origin Resource Sharing, we will set our headers to allow CORS with middleware like so:
-app.use(function(req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
+var corsOption = {
+  origin: true, 
+  moethods: 'GET, HEAD, PUT, PATCH, POST, DELETE',
+  credentials: true, 
+  exposedHeaders: ['x-auth-token']
+}
 
-  //and remove cacheing so we get the most recent comments
-  res.setHeader('Cache-Control', 'no-cache');
-  next();
+app.use(cors(corsOption));
+
+var passportConfig = require('./passport');
+
+passportConfig();
+
+/* TODO: in production replace 'my-secret' with 
+ * either the secret for HMAC algorithms, or the PEM encoded private key for RSA and ECDSA 
+ * more instructions in the library documentation */
+
+var createToken = function(auth) {
+  return jwt.sign({
+    id: auth.id
+  }, 'my-secret',
+  {
+    expiresIn: 60*120
+  });
+};
+
+var generateToken = function(req, res, next) {
+  req.token = createToken(req.auth);
+  return next();
+}
+
+var sendToken = function(req, res) {
+  res.setHeader('x-auth-token', req.token);
+  return res.status(200).send(JSON.stringify(req.user));
+}
+
+var authenticate = expressJwt({
+  secret: 'my-secret', 
+  requestProperty: 'auth', 
+  getToken: function(req) {
+    if (req.headers['x-auth-token']) {
+      return req.header['x-auth-token'];
+    }
+    return null;
+  }
 });
 
-//now we can set the route path & initialize the API
 router.get('/', function(req, res) {
   res.json({ message: 'API Initialized!'});
 });
+
+router.route('/auth/twitter/reverse')
+  .post(function(req, res) {
+    request.post({
+      url: 'https://api.twitter.com/oauth/request_token',
+      oauth: {
+        oauth_callback: "http%3A%2F%2Flocalhost%3A3000%2Ftwitter-callback",
+        consumer_key: twitterConfig.consumer_key,
+        consumer_secret: twitterConfig.consumer_secret
+      }
+    }, function (err, r, body) {
+      if (err) {
+        return res.send(500, { message: err.message });
+      }
+
+      var jsonStr = '{ "' + body.replace(/&/g, '", "').replace(/=/g, '": "') + '"}';
+      
+      res.send(JSON.parse(jsonStr));
+    });
+  });
+
+router.route('/auth/twitter')
+  .post((req, res, next) => {
+    request.post({
+      url: 'https://api.twitter.com/oauth/access_token?oauth_verifier',
+      oauth: {
+        consumer_key: twitterConfig.consumer_key,
+        consumer_secret: twitterConfig.consumer_secret,
+        token: req.query.oauth_token
+      },
+      form: { oauth_verifier: req.query.oauth_verifier }
+    }, function (err, r, body) {
+      if (err) {
+        return res.send(500, { message: err.message });
+      }
+
+      const bodyString = '{ "' + body.replace(/&/g, '", "').replace(/=/g, '": "') + '"}';
+      const parsedBody = JSON.parse(bodyString);
+
+      req.body['oauth_token'] = parsedBody.oauth_token;
+      req.body['oauth_token_secret'] = parsedBody.oauth_token_secret;
+      req.body['user_id'] = parsedBody.user_id;
+
+      next();
+    });
+  }, passport.authenticate('twitter-token', {session: false}), function(req, res, next) {
+    if (!req.user) {
+      return res.send(401, 'User Not Authenticated');
+    }
+
+    req.auth = {
+      id: req.user.id
+    };
+
+    return next();
+  }, generateToken, sendToken);
+
 
 router.route('/threads')
   .get(function(req, res) {
     Thread.find(function(err, threads) {
       if (err) {
-        console.log('error in finding threads');
         res.send(err);
       }
       else {
@@ -98,8 +195,6 @@ router.route('/threads/:thread_id/:tweet_id')
       res.send(err);
     }
     else {
-      console.log('The thread returned by mongoose is: ' + thread);
-      console.log('Req.parms is: ' + req.params.tweet_id);
       var tweet = thread.tweets.id(req.params.tweet_id);
       tweet.remove();
       thread.save(function(err) {
@@ -133,9 +228,7 @@ router.route('/threads/:thread_id')
       else {
         var tweet = new Tweet();
         tweet.text = '';
-        console.log('\n' + 'The new tweet is: ' + tweet + '\n');
         thread.tweets.push(tweet);
-        console.log('\n' + 'Now the thread is: ' + thread.tweets + '\n');
         thread.save(function(err) {
           if (err) {
             res.send(err)

@@ -13,7 +13,7 @@ var UserSchema = new Schema({
   }
 });
 
-UserSchema.methods.upsertTwitterUser = function(token, tokenSecret, profile, callback) {
+UserSchema.statics.upsertTwitterUser = function(token, tokenSecret, profile, callback) {
 
   /* Copy-pasted from https://medium.com/@robince885/how-to-do-twitter-authentication-with-react-and-restful-api-e525f30c62bb */
   /* Leaving that = this in for now, although I don't understand it. TODO:
@@ -31,7 +31,6 @@ UserSchema.methods.upsertTwitterUser = function(token, tokenSecret, profile, cal
           tokenSecret: tokenSecret
         }
       });
-
       newUser.save(function(error, savedUser) {
         if (error) {
           console.log(error);
