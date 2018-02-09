@@ -10,6 +10,8 @@ var expressJwt = require('express-jwt');
 var request = require('request');
 var cors = require('cors');
 
+require('request-debug')(request);
+
 var twitterConfig = require('./twitter.config.js');
 
 var Tweet = require('./model/tweet');
@@ -81,8 +83,8 @@ router.route('/auth/twitter/reverse')
       url: 'https://api.twitter.com/oauth/request_token',
       oauth: {
         oauth_callback: "http%3A%2F%2Flocalhost%3A3000%2Ftwitter-callback",
-        consumer_key: twitterConfig.consumer_key,
-        consumer_secret: twitterConfig.consumer_secret
+        consumerKey: twitterConfig.consumerKey,
+        consumerSecret: twitterConfig.consumerSecret
       }
     }, function (err, r, body) {
       if (err) {
@@ -100,8 +102,8 @@ router.route('/auth/twitter')
     request.post({
       url: 'https://api.twitter.com/oauth/access_token?oauth_verifier',
       oauth: {
-        consumer_key: twitterConfig.consumer_key,
-        consumer_secret: twitterConfig.consumer_secret,
+        consumerKey: twitterConfig.consumerKey,
+        consumerSecret: twitterConfig.consumerSecret,
         token: req.query.oauth_token
       },
       form: { oauth_verifier: req.query.oauth_verifier }
