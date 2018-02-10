@@ -10,7 +10,7 @@ export class Home extends React.Component {
 
   }
 
-  onSuccess = (response) => {
+  onSuccess(response) {
     const token = response.headers.get('x-auth-token');
     response.json().then(user => {
       if (token) {
@@ -20,11 +20,11 @@ export class Home extends React.Component {
     })
   }
 
-  onFailure = (error) => {
+  onFailure(error) {
     console.log(error)
   }
 
-  logout = () => {
+  logout() {
     this.setState({ isAuthenticated: false, user: null, token: ''});
   }
 
@@ -46,7 +46,7 @@ export class Home extends React.Component {
     /* TODO: get API url base and port from props rather than hard-coding */
     (
       <TwitterLogin loginUrl='http://localhost:3001/api/auth/twitter'
-                    onFailure={this.onFailure} onSuccess={this.onSuccess}
+                    onFailure={this.onFailure.bind(this)} onSuccess={this.onSuccess.bind(this)}
                     requestTokenUrl='http://localhost:3001/api/auth/twitter/reverse'/>
     );
 

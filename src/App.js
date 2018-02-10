@@ -17,6 +17,12 @@ class ThreadListParent extends Component {
   }
 }
 
+  /* TODO: there should be a way to expose the properties and state of the app
+   * to the components that get rendered, to obviate need for the parent
+   * components. */
+
+  /* TODO: extract the header stuff into a generic "page" component */
+
 class App extends Component {
   render() {
 

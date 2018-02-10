@@ -15,10 +15,14 @@ var UserSchema = new Schema({
 
 UserSchema.statics.upsertTwitterUser = function(token, tokenSecret, profile, callback) {
 
-  /* Copy-pasted from https://medium.com/@robince885/how-to-do-twitter-authentication-with-react-and-restful-api-e525f30c62bb */
-  /* Leaving that = this in for now, although I don't understand it. TODO:
-   * figure out what that = this does and why. */
+  /* when mongoose calls upsertTwitterUser, it probably calls
+   * upserTwitterUser.bind(UserSchema). See what mongoose says about what it
+   * binds when it calls that function */
 
+  /* "this" object seems to be constructor for the user schema? */
+  /* TODO: try `new UserSchema` instead - does it break? why? */
+
+  console.log(this);
   var that = this;
 
   return this.findOne({
