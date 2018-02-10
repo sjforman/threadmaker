@@ -44,6 +44,7 @@ export class ThreadList extends React.Component {
     .then(res => {
       var thread = {
         _id: res.data.id,
+        userId: '5a7cfdf18a53a37dd381fd3f',
         tweets: []
       }
     array.push(thread)

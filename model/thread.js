@@ -3,12 +3,14 @@
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var TweetSchema = require('./tweet.js');
 
 var TweetSchema = new Schema({
   text: String
 });
 
 var ThreadSchema = new Schema({
+  userId: mongoose.Schema.Types.ObjectId,
   tweets: [TweetSchema]
 });
 

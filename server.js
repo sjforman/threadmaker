@@ -14,8 +14,8 @@ require('request-debug')(request);
 
 var twitterConfig = require('./twitter.config.js');
 
-var Tweet = require('./model/tweet');
 var Thread = require('./model/thread');
+var Tweet = require('./model/tweet');
 var User = require('./model/user');
 
 var app = express();
@@ -152,6 +152,7 @@ router.route('/threads')
   .post(function(req, res) {
     var thread = new Thread();
     thread.id = req.body._id;
+    thread.userId = '5a7cfdf18a53a37dd381fd3f';
     thread.save(function(err, thread) {
       if (err) {
         res.send(err);

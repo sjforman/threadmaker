@@ -30,9 +30,11 @@ export class Thread extends React.Component {
   constructor(props) { 
     super(props);
     this.state = {
-      characterLimit: '280',
+      characterLimit: '140',
       tweets: []
     };
+
+    /* TODO: persist character limit as a property of the thread */
 
     this.handleCharacterLimitChange = this.handleCharacterLimitChange.bind(this);
     this.loadTweetsFromServer = this.loadTweetsFromServer.bind(this);
