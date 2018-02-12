@@ -20,7 +20,7 @@ class ThreadListContainer extends React.Component {
 }
 
 export class ThreadList extends React.Component {
-  constructor(props) { 
+  constructor(props) {
     super(props);
     this.state = {
       threads: []
@@ -31,10 +31,8 @@ export class ThreadList extends React.Component {
   }
 
   loadThreadsFromServer() {
-    var jwtToken = this.props.jwtToken;
-    console.log(jwtToken);
-    axios({ method: 'GET', url: this.props.url, headers: 
-      { 'x-auth-token' : jwtToken }
+    axios({ method: 'GET', url: this.props.url, headers:
+      { 'x-auth-token' : this.props.jwtToken }
     })
       .then(res => {
         this.setState({ threads: res.data })
@@ -43,7 +41,8 @@ export class ThreadList extends React.Component {
 
   onAddThread() {
     var array = this.state.threads
-    axios.post(this.props.url, {
+    axios({ method: 'POST', url: this.props.url, headers:
+      { 'x-auth-token' : this.props.jwtToken }
     })
     .then(res => {
       var thread = {
@@ -65,7 +64,9 @@ export class ThreadList extends React.Component {
     var threadid = this.state.threads[index]._id;
     array.splice(index, 1);
     this.setState({threads: array})
-    axios.delete(`${this.props.url}/${threadid}`)
+    axios({ method: 'DELETE', url: `${this.props.url}/${threadid}`, headers:
+      { 'x-auth-token' : this.props.jwtToken }
+    })
       .then(res => {
         console.log('Thread deleted: ' + JSON.stringify(threadid));
       })
@@ -73,7 +74,7 @@ export class ThreadList extends React.Component {
         console.error(err);
       });
   }
-  
+
   componentDidMount() {
     this.loadThreadsFromServer();
   }
@@ -83,9 +84,9 @@ export class ThreadList extends React.Component {
     var threads = this.state.threads.map((thread, index) => {
       return (
         <ThreadSummary
-          key={thread._id} 
+          key={thread._id}
           id={thread._id}
-          index={index} 
+          index={index}
           tweets={thread.tweets}
           numTweets={thread.tweets.length || 0}
           deleteThread={this.onDeleteThread.bind(this, index)}/>

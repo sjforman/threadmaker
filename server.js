@@ -21,9 +21,9 @@ var twitterConfig = require('./twitter.config.js');
 var port = process.env.API_PORT || 3001;
 var passportConfig = require('./passport');
 var corsOption = {
-  origin: true, 
+  origin: true,
   moethods: 'GET, HEAD, PUT, PATCH, POST, DELETE',
-  credentials: true, 
+  credentials: true,
   exposedHeaders: ['x-auth-token']
 }
 
@@ -32,8 +32,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 passportConfig();
 
-/* TODO: in production replace 'my-secret' with 
- * either the secret for HMAC algorithms, or the PEM encoded private key for RSA and ECDSA 
+/* TODO: in production replace 'my-secret' with
+ * either the secret for HMAC algorithms, or the PEM encoded private key for RSA and ECDSA
  * more instructions in the library documentation */
 
 var createToken = function(auth) {
@@ -56,10 +56,9 @@ var sendToken = function(req, res) {
 }
 
 var authenticate = expressJwt({
-  secret: 'my-secret', 
-  requestProperty: 'auth', 
+  secret: 'my-secret',
+  requestProperty: 'auth',
   getToken: function(req) {
-    console.log(req.headers);
     if (req.headers['x-auth-token']) {
       return req.headers['x-auth-token'];
     }
@@ -143,7 +142,7 @@ router.route('/threads')
       }
     });
   })
-  .post(function(req, res) {
+  .post(authenticate, function(req, res) {
     var thread = new Thread();
     thread.id = req.body._id;
     thread.userId = '5a7cfdf18a53a37dd381fd3f';
