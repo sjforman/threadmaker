@@ -22,7 +22,6 @@ UserSchema.statics.upsertTwitterUser = function(token, tokenSecret, profile, cal
   /* "this" object seems to be constructor for the user schema? */
   /* TODO: try `new UserSchema` instead - does it break? why? */
 
-  console.log(this);
   var that = this;
 
   return this.findOne({

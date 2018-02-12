@@ -35,15 +35,16 @@ export class Thread extends React.Component {
     };
 
     /* TODO: persist character limit as a property of the thread */
+    /* TODO: wouldn't a more descriptive name for "handle change" better? */
 
     this.handleCharacterLimitChange = this.handleCharacterLimitChange.bind(this);
     this.loadTweetsFromServer = this.loadTweetsFromServer.bind(this);
     this.onAddTweet = this.onAddTweet.bind(this);
     this.onDeleteTweet = this.onDeleteTweet.bind(this);
-    /* TODO: wouldn't a more descriptive name for "handle change" better? */
     this.handleChange = this.handleChange.bind(this);
     this.moveTweetDown = this.moveTweetDown.bind(this);
     this.moveTweetUp = this.moveTweetUp.bind(this);
+    this.loadUserFromToken = this.loadUserFromToken.bind(this);
   }
 
   handleCharacterLimitChange(event){

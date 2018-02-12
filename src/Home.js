@@ -10,11 +10,23 @@ export class Home extends React.Component {
 
   }
 
+  loadUserFromToken() {
+    let token = localStorage.getItem('jwtToken');
+    console.log(token);
+    if(!token || token === '') {
+      return;
+    }
+    else {
+      this.setState({isAuthenticated: true, user: 'x', token: token});
+    }
+  }
+
   onSuccess(response) {
     const token = response.headers.get('x-auth-token');
     response.json().then(user => {
       if (token) {
         this.setState({isAuthenticated: true, user: user, token: token});
+        localStorage.setItem('jwtToken', token);
       }
       console.log(this.state);
     })
@@ -26,18 +38,21 @@ export class Home extends React.Component {
 
   logout() {
     this.setState({ isAuthenticated: false, user: null, token: ''});
+    localStorage.removeItem('jwtToken');
+  }
+
+  componentWillMount() {
+    this.loadUserFromToken()
   }
 
   render() {
+
 
     let content = !!this.state.isAuthenticated ?
       (
       <div>
         <div>
-          {this.state.user.id}
-        </div>
-        <div>
-          <button onClick={this.logout} className="button" >
+          <button onClick={this.logout.bind(this)} className="button" >
             Log out
           </button>
         </div>

@@ -10,10 +10,6 @@ var expressJwt = require('express-jwt');
 var request = require('request');
 var cors = require('cors');
 
-require('request-debug')(request);
-
-var twitterConfig = require('./twitter.config.js');
-
 var Thread = require('./model/thread');
 var Tweet = require('./model/tweet');
 var User = require('./model/user');
@@ -21,11 +17,9 @@ var User = require('./model/user');
 var app = express();
 var router = express.Router();
 
+var twitterConfig = require('./twitter.config.js');
 var port = process.env.API_PORT || 3001;
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
+var passportConfig = require('./passport');
 var corsOption = {
   origin: true, 
   moethods: 'GET, HEAD, PUT, PATCH, POST, DELETE',
@@ -34,9 +28,10 @@ var corsOption = {
 }
 
 app.use(cors(corsOption));
-
-var passportConfig = require('./passport');
-
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+//app.use(passport.initialize());
+//app.use(passport.session());
 passportConfig();
 
 /* TODO: in production replace 'my-secret' with 
@@ -73,7 +68,7 @@ var authenticate = expressJwt({
   }
 });
 
-router.get('/', function(req, res) {
+router.get('/', authenticate, function(req, res) {
   res.json({ message: 'API Initialized!'});
 });
 
@@ -102,7 +97,6 @@ router.route('/auth/twitter/reverse')
 
 router.route('/auth/twitter')
   .post((req, res, next) => {
-    console.log(req.query.oauth_token);
     request.post({
       url: 'https://api.twitter.com/oauth/access_token?oauth_verifier',
       oauth: {
@@ -139,7 +133,7 @@ router.route('/auth/twitter')
 
 
 router.route('/threads')
-  .get(function(req, res) {
+  .get(authenticate, function(req, res) {
     Thread.find(function(err, threads) {
       if (err) {
         res.send(err);
