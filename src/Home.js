@@ -6,18 +6,19 @@ export class Home extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = { isAuthenticated: false, user: null, token: ''};
+    this.state = { isAuthenticated: false, user: null, token: '', screenName: null};
 
   }
 
   loadUserFromToken() {
     let token = localStorage.getItem('jwtToken');
-    console.log(token);
     if(!token || token === '') {
       return;
     }
     else {
-      this.setState({isAuthenticated: true, user: 'x', token: token});
+      let userId = localStorage.getItem('userId');
+      let screenName = localStorage.getItem('screenName');
+      this.setState({isAuthenticated: true, user: userId , token: token, screenName: screenName });
     }
   }
 
@@ -25,8 +26,10 @@ export class Home extends React.Component {
     const token = response.headers.get('x-auth-token');
     response.json().then(user => {
       if (token) {
-        this.setState({isAuthenticated: true, user: user, token: token});
+        this.setState({isAuthenticated: true, user: user.twitterProvider.id, token: token, screenName: user.twitterProvider.screen_name });
         localStorage.setItem('jwtToken', token);
+        localStorage.setItem('userId', user.twitterProvider.id);
+        localStorage.setItem('screenName', user.twitterProvider.screen_name);
       }
       console.log(this.state);
     })
@@ -37,8 +40,10 @@ export class Home extends React.Component {
   }
 
   logout() {
-    this.setState({ isAuthenticated: false, user: null, token: ''});
+    this.setState({ isAuthenticated: false, user: null, token: '', screenName: null });
     localStorage.removeItem('jwtToken');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('screenName');
   }
 
   componentWillMount() {
@@ -51,6 +56,9 @@ export class Home extends React.Component {
     let content = !!this.state.isAuthenticated ?
       (
       <div>
+        <div>
+          <p>Logged in as: {this.state.screenName}</p>
+        </div>
         <div>
           <button onClick={this.logout.bind(this)} className="button" >
             Log out

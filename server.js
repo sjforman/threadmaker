@@ -30,8 +30,6 @@ var corsOption = {
 app.use(cors(corsOption));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-//app.use(passport.initialize());
-//app.use(passport.session());
 passportConfig();
 
 /* TODO: in production replace 'my-secret' with 
@@ -113,9 +111,12 @@ router.route('/auth/twitter')
       const bodyString = '{ "' + body.replace(/&/g, '", "').replace(/=/g, '": "') + '"}';
       const parsedBody = JSON.parse(bodyString);
 
+      console.log('bodyString from /auth/twitter ' + bodyString);
+
       req.body['oauth_token'] = parsedBody.oauth_token;
       req.body['oauth_token_secret'] = parsedBody.oauth_token_secret;
       req.body['user_id'] = parsedBody.user_id;
+      req.body['screen_name'] = parsedBody.screen_name;
 
       next();
     });

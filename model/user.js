@@ -8,6 +8,7 @@ var UserSchema = new Schema({
   twitterProvider: {
     type: {
       id: String, 
+      screen_name: String,
       token: String
     }
   }
@@ -31,6 +32,7 @@ UserSchema.statics.upsertTwitterUser = function(token, tokenSecret, profile, cal
       var newUser = new that({
         twitterProvider: {
           id: profile.id,
+          screen_name: profile.username,
           token: token, 
           tokenSecret: tokenSecret
         }
