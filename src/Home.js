@@ -31,7 +31,6 @@ export class Home extends React.Component {
         localStorage.setItem('userId', user.twitterProvider.id);
         localStorage.setItem('screenName', user.twitterProvider.screen_name);
       }
-      console.log(this.state);
     })
   }
 

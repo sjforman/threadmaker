@@ -14,7 +14,6 @@ class ThreadParent extends Component {
 
   componentWillMount() {
     let jwtToken = localStorage.getItem('jwtToken');
-    console.log(jwtToken);
     if (jwtToken) {
       this.setState({ jwtToken: jwtToken });
     }
@@ -34,7 +33,6 @@ class ThreadListParent extends Component {
 
   componentWillMount() {
     let jwtToken = localStorage.getItem('jwtToken');
-    console.log(jwtToken);
     if (jwtToken) {
       this.setState({ jwtToken: jwtToken });
     }
