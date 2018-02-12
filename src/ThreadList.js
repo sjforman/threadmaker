@@ -31,7 +31,11 @@ export class ThreadList extends React.Component {
   }
 
   loadThreadsFromServer() {
-    axios.get(this.props.url)
+    var jwtToken = this.props.jwtToken;
+    console.log(jwtToken);
+    axios({ method: 'GET', url: this.props.url, headers: 
+      { 'x-auth-token' : jwtToken }
+    })
       .then(res => {
         this.setState({ threads: res.data })
       })

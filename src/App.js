@@ -6,14 +6,41 @@ import { Thread } from './Thread';
 import { Home } from './Home';
 
 class ThreadParent extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { jwtToken: null }
+  }
+
+  componentWillMount() {
+    let jwtToken = localStorage.getItem('jwtToken');
+    console.log(jwtToken);
+    if (jwtToken) {
+      this.setState({ jwtToken: jwtToken });
+    }
+  }
+
   render() {
-    return <Thread url='http://localhost:3001/api/threads' pollInterval={2000} thread_id={this.props.match.params.thread_id}/>
+    return <Thread url='http://localhost:3001/api/threads' jwtToken={this.state.jwtToken} pollInterval={2000} thread_id={this.props.match.params.thread_id}/>
   }
 }
 
 class ThreadListParent extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { jwtToken: null }
+  }
+
+  componentWillMount() {
+    let jwtToken = localStorage.getItem('jwtToken');
+    console.log(jwtToken);
+    if (jwtToken) {
+      this.setState({ jwtToken: jwtToken });
+    }
+  }
   render() {
-    return <ThreadList url='http://localhost:3001/api/threads' pollInterval={2000}/>
+    return <ThreadList url='http://localhost:3001/api/threads' jwtToken={this.state.jwtToken} pollInterval={2000}/>
   }
 }
 

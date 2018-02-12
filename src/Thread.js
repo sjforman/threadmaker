@@ -44,7 +44,6 @@ export class Thread extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.moveTweetDown = this.moveTweetDown.bind(this);
     this.moveTweetUp = this.moveTweetUp.bind(this);
-    this.loadUserFromToken = this.loadUserFromToken.bind(this);
   }
 
   handleCharacterLimitChange(event){
@@ -53,7 +52,10 @@ export class Thread extends React.Component {
 
   loadTweetsFromServer() {
     var threadid = this.props.thread_id;
-    axios.get(`${this.props.url}/${threadid}`)
+    var jwtToken = this.props.jwtToken;
+    axios( { method: 'GET', url: `${this.props.url}/${threadid}`,
+      headers: { 'x-auth-token': jwtToken }
+    })
       .then(res => {
         this.setState({ tweets: res.data.tweets })
       })

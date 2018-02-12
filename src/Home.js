@@ -56,8 +56,9 @@ export class Home extends React.Component {
     let content = !!this.state.isAuthenticated ?
       (
       <div>
-        <div>
+        <div className="mb5">
           <p>Logged in as: {this.state.screenName}</p>
+          <a href='/threads' className="link">My threads</a>
         </div>
         <div>
           <button onClick={this.logout.bind(this)} className="button" >

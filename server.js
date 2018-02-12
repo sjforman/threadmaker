@@ -59,8 +59,9 @@ var authenticate = expressJwt({
   secret: 'my-secret', 
   requestProperty: 'auth', 
   getToken: function(req) {
+    console.log(req.headers);
     if (req.headers['x-auth-token']) {
-      return req.header['x-auth-token'];
+      return req.headers['x-auth-token'];
     }
     return null;
   }
@@ -111,8 +112,6 @@ router.route('/auth/twitter')
       const bodyString = '{ "' + body.replace(/&/g, '", "').replace(/=/g, '": "') + '"}';
       const parsedBody = JSON.parse(bodyString);
 
-      console.log('bodyString from /auth/twitter ' + bodyString);
-
       req.body['oauth_token'] = parsedBody.oauth_token;
       req.body['oauth_token_secret'] = parsedBody.oauth_token_secret;
       req.body['user_id'] = parsedBody.user_id;
@@ -162,7 +161,7 @@ router.route('/threads')
   })
 
 router.route('/threads/:thread_id/:tweet_id')
-  .get(function(req, res) {
+  .get(authenticate, function(req, res) {
     Thread.findById(req.params.thread_id, function(err, thread) {
       if (err) {
         res.send(err);
