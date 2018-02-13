@@ -55,12 +55,13 @@ var sendToken = function(req, res) {
   return res.status(200).send(JSON.stringify(req.user));
 }
 
+/* TODO: tokens expire after 15 minutes. How to handle? */
+
 var authenticate = expressJwt({
   secret: 'my-secret',
   requestProperty: 'auth',
   getToken: function(req) {
     if (req.headers['x-auth-token']) {
-      console.log(req.headers);
       return req.headers['x-auth-token'];
     }
     return null;
@@ -134,7 +135,6 @@ router.route('/auth/twitter')
 
 router.route('/threads')
   .get(authenticate, function(req, res) {
-    console.log(req.headers.userid);
     Thread.find(
       {userId: req.headers.userid},
       function(err, threads) {
