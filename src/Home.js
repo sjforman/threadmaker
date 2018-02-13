@@ -6,7 +6,7 @@ export class Home extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = { isAuthenticated: false, user: null, token: '', screenName: null};
+    this.state = { isAuthenticated: false, userId: null, token: '', screenName: null};
 
   }
 
@@ -16,9 +16,9 @@ export class Home extends React.Component {
       return;
     }
     else {
-      let userId = localStorage.getItem('userId');
       let screenName = localStorage.getItem('screenName');
-      this.setState({isAuthenticated: true, user: userId , token: token, screenName: screenName });
+      let userId = localStorage.getItem('userId');
+      this.setState({isAuthenticated: true, userId: userId , token: token, screenName: screenName });
     }
   }
 
@@ -26,10 +26,11 @@ export class Home extends React.Component {
     const token = response.headers.get('x-auth-token');
     response.json().then(user => {
       if (token) {
-        this.setState({isAuthenticated: true, user: user.twitterProvider.id, token: token, screenName: user.twitterProvider.screen_name });
+        this.setState({isAuthenticated: true, userId: user._id, token: token, screenName: user.twitterProvider.screen_name });
         localStorage.setItem('jwtToken', token);
-        localStorage.setItem('userId', user.twitterProvider.id);
+        localStorage.setItem('twitterId', user.twitterProvider.id);
         localStorage.setItem('screenName', user.twitterProvider.screen_name);
+        localStorage.setItem('userId', user._id); 
       }
     })
   }
@@ -39,10 +40,11 @@ export class Home extends React.Component {
   }
 
   logout() {
-    this.setState({ isAuthenticated: false, user: null, token: '', screenName: null });
+    this.setState({ isAuthenticated: false, userId: null, token: '', screenName: null });
     localStorage.removeItem('jwtToken');
-    localStorage.removeItem('userId');
+    localStorage.removeItem('twitterId');
     localStorage.removeItem('screenName');
+    localStorage.removeItem('userId');
   }
 
   componentWillMount() {

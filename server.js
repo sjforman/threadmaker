@@ -60,6 +60,7 @@ var authenticate = expressJwt({
   requestProperty: 'auth',
   getToken: function(req) {
     if (req.headers['x-auth-token']) {
+      console.log(req.headers);
       return req.headers['x-auth-token'];
     }
     return null;
@@ -133,7 +134,10 @@ router.route('/auth/twitter')
 
 router.route('/threads')
   .get(authenticate, function(req, res) {
-    Thread.find(function(err, threads) {
+    console.log(req.headers.userid);
+    Thread.find(
+      {userId: req.headers.userid},
+      function(err, threads) {
       if (err) {
         res.send(err);
       }
@@ -145,7 +149,7 @@ router.route('/threads')
   .post(authenticate, function(req, res) {
     var thread = new Thread();
     thread.id = req.body._id;
-    thread.userId = '5a7cfdf18a53a37dd381fd3f';
+    thread.userId = req.headers.userid;
     thread.save(function(err, thread) {
       if (err) {
         res.send(err);

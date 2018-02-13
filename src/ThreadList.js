@@ -30,9 +30,13 @@ export class ThreadList extends React.Component {
     this.onDeleteThread = this.onDeleteThread.bind(this);
   }
 
+  /* TODO: DRY out userId and JwT token config with global Axios defaults */
+
   loadThreadsFromServer() {
     axios({ method: 'GET', url: this.props.url, headers:
-      { 'x-auth-token' : this.props.jwtToken }
+      { 'x-auth-token' : this.props.jwtToken,
+        'userId' : localStorage.getItem('userId')
+      }
     })
       .then(res => {
         this.setState({ threads: res.data })
@@ -41,13 +45,16 @@ export class ThreadList extends React.Component {
 
   onAddThread() {
     var array = this.state.threads
+    var userId = localStorage.getItem('userId');
     axios({ method: 'POST', url: this.props.url, headers:
-      { 'x-auth-token' : this.props.jwtToken }
+      { 'x-auth-token' : this.props.jwtToken,
+        'userId' : userId
+      }
     })
     .then(res => {
       var thread = {
         _id: res.data.id,
-        userId: '5a7cfdf18a53a37dd381fd3f',
+        userId: userId,
         tweets: []
       }
     array.push(thread)
