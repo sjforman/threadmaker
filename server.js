@@ -9,6 +9,7 @@ var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
 var request = require('request');
 var cors = require('cors');
+var twitter = require('twitter');
 
 var Thread = require('./model/thread');
 var Tweet = require('./model/tweet');
@@ -275,6 +276,25 @@ router.route('/threads/:thread_id')
         res.json({ message: 'Thread has been deleted' })
       }
     })
+  })
+
+router.route('/publish')
+  .post(function(req, res) {
+    console.log(req.headers.oauthtoken);
+    var twitterClient = new twitter({
+      consumer_key: twitterConfig.consumerKey,
+      consumer_secret: twitterConfig.consumerSecret,
+      access_token_key: req.headers.oauthtoken,
+      access_token_secret: req.headers.oauthsecret
+    });
+    console.log(twitterClient);
+    console.log('Publishing tweet: ' + req.body.text);
+    twitterClient.post('statuses/update', {status: req.body.text}, function(error, tweet, response) {
+      if (error) {
+        console.log(error)
+      }
+    })
+    res.end();
   })
 
 //Use our router configuration when we call /api

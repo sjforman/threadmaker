@@ -87,6 +87,9 @@ export class Tweet extends React.Component {
           <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 dib mid-gray" onClick={this.props.deleteTweet.bind(this)}>
             Delete tweet
           </button>
+          <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 dib mid-gray" onClick={this.props.publishTweet.bind(this)}>
+            Publish tweet
+          </button>
           <CharacterCounter text={this.props.text} characterLimit={this.props.characterLimit} />
         </div>
       </div>

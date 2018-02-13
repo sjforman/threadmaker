@@ -31,6 +31,8 @@ export class Home extends React.Component {
         localStorage.setItem('twitterId', user.twitterProvider.id);
         localStorage.setItem('screenName', user.twitterProvider.screen_name);
         localStorage.setItem('userId', user._id); 
+        localStorage.setItem('oauthToken', user.twitterProvider.token);
+        localStorage.setItem('oauthSecret', user.twitterProvider.tokenSecret);
       }
     })
   }
@@ -45,6 +47,8 @@ export class Home extends React.Component {
     localStorage.removeItem('twitterId');
     localStorage.removeItem('screenName');
     localStorage.removeItem('userId');
+    localStorage.removeItem('oauthToken');
+    localStorage.removeItem('oauthSecret');
   }
 
   componentWillMount() {

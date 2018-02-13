@@ -41,6 +41,7 @@ export class Thread extends React.Component {
     this.loadTweetsFromServer = this.loadTweetsFromServer.bind(this);
     this.onAddTweet = this.onAddTweet.bind(this);
     this.onDeleteTweet = this.onDeleteTweet.bind(this);
+    this.onPublishTweet = this.onPublishTweet.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.moveTweetDown = this.moveTweetDown.bind(this);
     this.moveTweetUp = this.moveTweetUp.bind(this);
@@ -179,6 +180,27 @@ export class Thread extends React.Component {
     }
   }
 
+  onPublishTweet(index, e) {
+    /*TODO: figure out syntax for concatenating string + variable here */
+    let tweet = this.state.tweets[index];
+    let jwtToken = this.props.jwtToken;
+    let oauthToken = localStorage.getItem('oauthToken');
+    let oauthSecret = localStorage.getItem('oauthSecret');
+    axios({
+        method: 'POST',
+        url: 'http://localhost:3001/api/publish',
+        data:  tweet,
+        headers: { 'x-auth-token': jwtToken, 
+          'oauthToken' : oauthToken,
+          'oauthSecret' : oauthSecret,
+        }
+    })
+    .catch(err => {
+      console.error(err);
+    });
+    console.log('Index of Tweet to publish: ' + index);
+  }
+
   componentDidMount() {
     this.loadTweetsFromServer();
   }
@@ -192,6 +214,7 @@ export class Thread extends React.Component {
           id={tweet._id}
           index={index}
           deleteTweet={this.onDeleteTweet.bind(this, index)}
+          publishTweet={this.onPublishTweet.bind(this, index)}
           handleChange={this.handleChange.bind(this, index)}
           handleTweetSubmit={this.handleTweetSubmit.bind(this, index)}
           characterLimit={this.state.characterLimit}
@@ -206,6 +229,7 @@ export class Thread extends React.Component {
       <ThreadContainer
         addTweet={this.onAddTweet}
         deleteTweet={this.onDeleteTweet.bind(this)}
+        publishTweet={this.onPublishTweet.bind(this)}
         handleChange={this.handleChange.bind(this)}
         handleCharacterLimitChange={this.handleCharacterLimitChange.bind(this)}
         characterLimit={this.state.characterLimit}
