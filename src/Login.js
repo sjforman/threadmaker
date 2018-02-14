@@ -1,12 +1,11 @@
 import React from 'react';
-
 import TwitterLogin from 'react-twitter-auth/lib/react-twitter-auth-component.js';
 
 export class Login extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = { isAuthenticated: false, userId: null, token: '', screenName: null};
+    this.state = { isAuthenticated: false, screenName: null};
 
   }
 
@@ -17,8 +16,7 @@ export class Login extends React.Component {
     }
     else {
       let screenName = localStorage.getItem('screenName');
-      let userId = localStorage.getItem('userId');
-      this.setState({isAuthenticated: true, userId: userId , token: token, screenName: screenName });
+      this.setState({isAuthenticated: true, screenName: screenName });
     }
   }
 
@@ -26,7 +24,7 @@ export class Login extends React.Component {
     const token = response.headers.get('x-auth-token');
     response.json().then(user => {
       if (token) {
-        this.setState({isAuthenticated: true, userId: user._id, token: token, screenName: user.twitterProvider.screen_name });
+        this.setState({isAuthenticated: true, screenName: user.twitterProvider.screen_name });
         localStorage.setItem('jwtToken', token);
         localStorage.setItem('twitterId', user.twitterProvider.id);
         localStorage.setItem('screenName', user.twitterProvider.screen_name);
@@ -42,13 +40,8 @@ export class Login extends React.Component {
   }
 
   logout() {
-    this.setState({ isAuthenticated: false, userId: null, token: '', screenName: null });
-    localStorage.removeItem('jwtToken');
-    localStorage.removeItem('twitterId');
-    localStorage.removeItem('screenName');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('oauthToken');
-    localStorage.removeItem('oauthSecret');
+    this.setState({ isAuthenticated: false, screenName: null });
+    localStorage.clear();
   }
 
   componentWillMount() {

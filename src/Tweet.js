@@ -18,12 +18,12 @@ export class Tweet extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      editMode: false 
+      editMode: false
     }
     this.enterEditMode = this.enterEditMode.bind(this);
     this.escFunction = this.escFunction.bind(this);
   }
-  
+
   escFunction(event){
     if(event.keyCode === 27) {
       this.setState({
@@ -32,7 +32,7 @@ export class Tweet extends React.Component {
       this.props.handleTweetSubmit()
     }
   }
-  
+
   enterEditMode() {
     this.setState({
       editMode : true
@@ -62,13 +62,13 @@ export class Tweet extends React.Component {
       {/* TODO: How do I preserve line breaks in the original input when they're rendered in final mode? */}
       {/* TODO: Tweet content in both modes should probably be encapsulated in component(s)? */}
       <div className="fl w-100 w-80-ns pa2">
-        {this.state.editMode ? 
+        {this.state.editMode ?
 
               <div>
-                <textarea 
+                <textarea
                   className="w-100 f3 db border-box hover-black ba b--black-20 pa2 br2 mb2 h4"
-                  value={this.props.text} 
-                  onChange={this.props.handleChange} 
+                  value={this.props.text}
+                  onChange={this.props.handleTweetEdit}
                   onKeyDown={this.escFunction}
                 />
               </div>

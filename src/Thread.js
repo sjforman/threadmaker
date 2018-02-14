@@ -46,7 +46,7 @@ export class Thread extends React.Component {
     this.onAddTweet = this.onAddTweet.bind(this);
     this.onDeleteTweet = this.onDeleteTweet.bind(this);
     this.onPublishTweet = this.onPublishTweet.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    this.handleTweetEdit = this.handleTweetEdit.bind(this);
     this.moveTweetDown = this.moveTweetDown.bind(this);
     this.moveTweetUp = this.moveTweetUp.bind(this);
   }
@@ -99,7 +99,6 @@ export class Thread extends React.Component {
       }
       array.push(tweet)
       this.setState({tweets: array})
-      console.log('Tweet added: ' + JSON.stringify(tweet));
     })
     .catch(err => {
       console.error(err);
@@ -113,7 +112,6 @@ export class Thread extends React.Component {
     var threadid = this.state.threadId;
     var array = this.state.tweets;
     var tweetid = this.state.tweets[index]._id;
-    console.log('Deleting tweet: ' + JSON.stringify(array[index]));
     array.splice(index, 1);
     this.setState({tweets: array})
     /* TODO: would it be better to `put` the thread instead of
@@ -122,15 +120,12 @@ export class Thread extends React.Component {
       `${this.props.url}/${threadid}/${tweetid}`,
       { 'x-auth-token': this.state.jwtToken }
     )
-      .then(res => {
-        console.log('Tweet deleted: ' + JSON.stringify(tweetid));
-      })
       .catch(err => {
         console.error(err);
       });
   }
 
-  handleChange(index, e) {
+  handleTweetEdit(index, e) {
     var newTweet = {
       _id: this.state.tweets[index]._id,
       text: e.target.value }
@@ -199,10 +194,12 @@ export class Thread extends React.Component {
           'oauthSecret' : oauthSecret,
         }
     })
+    .then(function() {
+      console.log('published tweet.')
+    })
     .catch(err => {
       console.error(err);
     });
-    console.log('Index of Tweet to publish: ' + index);
   }
 
   componentDidMount() {
@@ -219,7 +216,7 @@ export class Thread extends React.Component {
           index={index}
           deleteTweet={this.onDeleteTweet.bind(this, index)}
           publishTweet={this.onPublishTweet.bind(this, index)}
-          handleChange={this.handleChange.bind(this, index)}
+          handleTweetEdit={this.handleTweetEdit.bind(this, index)}
           handleTweetSubmit={this.handleTweetSubmit.bind(this, index)}
           characterLimit={this.state.characterLimit}
           moveTweetDown={this.moveTweetDown.bind(this, index)}
@@ -234,12 +231,12 @@ export class Thread extends React.Component {
         addTweet={this.onAddTweet}
         deleteTweet={this.onDeleteTweet.bind(this)}
         publishTweet={this.onPublishTweet.bind(this)}
-        handleChange={this.handleChange.bind(this)}
+        handleTweetEdit={this.handleTweetEdit.bind(this)}
         handleCharacterLimitChange={this.handleCharacterLimitChange.bind(this)}
         characterLimit={this.state.characterLimit}
         moveTweetDown={this.moveTweetDown.bind(this)}
         moveTweetUp={this.moveTweetUp.bind(this)}>
-          {tweets}
+            {tweets}
       </ThreadContainer>
       </div>
       );

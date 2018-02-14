@@ -11,9 +11,6 @@ export class ThreadSummary extends React.Component {
       tweetsPresent = true;
       firstTweet = this.props.tweets[0].text.slice(0,80) + '...';
     }
-    else {
-      tweetsPresent = false;
-    }
 
     return (
       <div className="mw9 center ph3-ns mb3 bb">
