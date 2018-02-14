@@ -1,11 +1,13 @@
 import React from 'react';
 import axios from 'axios';
 import { Tweet } from './Tweet';
+import { Header } from './Header';
 
 class ThreadContainer extends React.Component {
   render() {
     return (
     <div>
+      <Header />
       <div id="buttons" className="tc mb4">
         <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 mr1 dib mid-gray" href="#" onClick={this.props.addTweet}>
         Add tweet
@@ -31,7 +33,9 @@ export class Thread extends React.Component {
     super(props);
     this.state = {
       characterLimit: '140',
-      tweets: []
+      tweets: [],
+      jwtToken: localStorage.getItem('jwtToken'),
+      threadId: this.props.thread_id
     };
 
     /* TODO: persist character limit as a property of the thread */
@@ -51,10 +55,11 @@ export class Thread extends React.Component {
     this.setState({characterLimit: event.target.value})
   }
 
+  /* TODO: Don't include headers if jwtToken not set? */
+
   loadTweetsFromServer() {
-    axios( { method: 'GET', url: `${this.props.url}/${this.props.thread_id}`,
-    /* TODO: Don't include headers if jwtToken not set? */
-      headers: { 'x-auth-token': this.props.jwtToken }
+    axios( { method: 'GET', url: `${this.props.url}/${this.state.threadId}`,
+      headers: { 'x-auth-token': this.state.jwtToken }
     })
       .then(res => {
         this.setState({ tweets: res.data.tweets })
@@ -70,9 +75,9 @@ export class Thread extends React.Component {
     var newtweet = this.state.tweets[index];
     var tweetid = this.state.tweets[index]._id;
     axios.put(
-        `${this.props.url}/${this.props.thread_id}/${tweetid}`,
+        `${this.props.url}/${this.state.threadId}/${tweetid}`,
         newtweet,
-        { 'x-auth-token': this.props.jwtToken }
+        { 'x-auth-token': this.state.jwtToken }
     )
        .catch(err => {
         console.error(err);
@@ -82,9 +87,9 @@ export class Thread extends React.Component {
   onAddTweet() {
     var array = this.state.tweets;
     axios.post(
-        `${this.props.url}/${this.props.thread_id}`,
+        `${this.props.url}/${this.state.threadId}`,
         {},
-        { 'x-auth-token': this.props.jwtToken }
+        { 'x-auth-token': this.state.jwtToken }
     )
     .then(res => {
       var tweet = {
@@ -105,7 +110,7 @@ export class Thread extends React.Component {
     /* feels wrong to re-declare threadid in each function
      * like there should be some way to declare once?
      * Maybe it should be passed into the function as an argument? */
-    var threadid = this.props.thread_id;
+    var threadid = this.state.threadId;
     var array = this.state.tweets;
     var tweetid = this.state.tweets[index]._id;
     console.log('Deleting tweet: ' + JSON.stringify(array[index]));
@@ -115,7 +120,7 @@ export class Thread extends React.Component {
      * deleting the specific tweet? */
     axios.delete(
       `${this.props.url}/${threadid}/${tweetid}`,
-      { 'x-auth-token': this.props.jwtToken }
+      { 'x-auth-token': this.state.jwtToken }
     )
       .then(res => {
         console.log('Tweet deleted: ' + JSON.stringify(tweetid));
@@ -144,7 +149,7 @@ export class Thread extends React.Component {
      * so as to disable them rather than allow them to be clicked
      * when they shouldn't be */
     if (index > 0) {
-      var threadid = this.props.thread_id;
+      var threadid = this.state.threadId;
       var array = this.state.tweets;
       var tweetToMove = array[index];
       array[index] = array[index - 1];
@@ -153,7 +158,7 @@ export class Thread extends React.Component {
       axios.put(
         `${this.props.url}/${threadid}`,
         array,
-        { 'x-auth-token': this.props.jwtToken }
+        { 'x-auth-token': this.state.jwtToken }
       )
         .catch(err => {
           console.error(err);
@@ -163,7 +168,7 @@ export class Thread extends React.Component {
 
   moveTweetDown(index, e) {
     if (index + 1 < this.state.tweets.length) {
-      var threadid = this.props.thread_id;
+      var threadid = this.state.threadId;
       var array = this.state.tweets;
       var tweetToMove = array[index];
       array[index] = array[index + 1];
@@ -172,7 +177,7 @@ export class Thread extends React.Component {
       axios.put(
         `${this.props.url}/${threadid}`,
         array,
-        { 'x-auth-token': this.props.jwtToken }
+        { 'x-auth-token': this.state.jwtToken }
       )
         .catch(err => {
           console.error(err);
@@ -181,9 +186,8 @@ export class Thread extends React.Component {
   }
 
   onPublishTweet(index, e) {
-    /*TODO: figure out syntax for concatenating string + variable here */
     let tweet = this.state.tweets[index];
-    let jwtToken = this.props.jwtToken;
+    let jwtToken = this.state.jwtToken;
     let oauthToken = localStorage.getItem('oauthToken');
     let oauthSecret = localStorage.getItem('oauthSecret');
     axios({
@@ -235,7 +239,7 @@ export class Thread extends React.Component {
         characterLimit={this.state.characterLimit}
         moveTweetDown={this.moveTweetDown.bind(this)}
         moveTweetUp={this.moveTweetUp.bind(this)}>
-        {tweets}
+          {tweets}
       </ThreadContainer>
       </div>
       );
