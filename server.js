@@ -53,6 +53,7 @@ var generateToken = function(req, res, next) {
 
 var sendToken = function(req, res) {
   res.setHeader('x-auth-token', req.token);
+  req.user.twitterProvider.oauth_verifier = req.body.oauth_verifier;
   return res.status(200).send(JSON.stringify(req.user));
 }
 
@@ -116,6 +117,7 @@ router.route('/auth/twitter')
 
       req.body['oauth_token'] = parsedBody.oauth_token;
       req.body['oauth_token_secret'] = parsedBody.oauth_token_secret;
+      req.body['oauth_verifier'] = req.query.oauth_verifier;
       req.body['user_id'] = parsedBody.user_id;
       req.body['screen_name'] = parsedBody.screen_name;
 
@@ -278,8 +280,12 @@ router.route('/threads/:thread_id')
     })
   })
 
+//require('request').debug = true
+
+var jsonParser = bodyParser.json();
+
 router.route('/publish')
-  .post(function(req, res) {
+  .post((req, res, next) => {
     var twitterClient = new twitter({
       consumer_key: twitterConfig.consumerKey,
       consumer_secret: twitterConfig.consumerSecret,
@@ -291,7 +297,11 @@ router.route('/publish')
         res.send(error)
       }
       else {
-        res.json({ message: 'Tweet has been tweeted' });
+        res.json({
+          /* TODO: parse the response to just grab what's needed */
+          responseBody: response,
+          message: 'Tweet has been tweeted'
+        });
       }
     })
   })

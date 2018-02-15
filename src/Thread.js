@@ -39,7 +39,6 @@ export class Thread extends React.Component {
     };
 
     /* TODO: persist character limit as a property of the thread */
-    /* TODO: wouldn't a more descriptive name for "handle change" better? */
 
     this.handleCharacterLimitChange = this.handleCharacterLimitChange.bind(this);
     this.loadTweetsFromServer = this.loadTweetsFromServer.bind(this);
@@ -54,8 +53,6 @@ export class Thread extends React.Component {
   handleCharacterLimitChange(event){
     this.setState({characterLimit: event.target.value})
   }
-
-  /* TODO: Don't include headers if jwtToken not set? */
 
   loadTweetsFromServer() {
     axios( { method: 'GET', url: `${this.props.url}/${this.state.threadId}`,
@@ -182,6 +179,7 @@ export class Thread extends React.Component {
 
   onPublishTweet(index, e) {
     let tweet = this.state.tweets[index];
+    let tweetArray = this.state.tweets;
     let jwtToken = this.state.jwtToken;
     let oauthToken = localStorage.getItem('oauthToken');
     let oauthSecret = localStorage.getItem('oauthSecret');
@@ -191,15 +189,20 @@ export class Thread extends React.Component {
         data:  tweet,
         headers: { 'x-auth-token': jwtToken, 
           'oauthToken' : oauthToken,
-          'oauthSecret' : oauthSecret,
+          'oauthSecret' : oauthSecret
         }
     })
-    .then(function() {
-      console.log('published tweet.')
+    .then(function(response) {
+      /* TODO: handle the cases where response is not "all good" */
+      let publishedTweetId = JSON.parse(response.data.responseBody.body).id;
+      tweetArray[index].pubstatus = 'published';
+      tweetArray[index].publishedTweetId = publishedTweetId;
     })
     .catch(err => {
       console.error(err);
     });
+    this.setState({tweets: tweetArray});
+    console.log(this.state.tweets);
   }
 
   componentDidMount() {
