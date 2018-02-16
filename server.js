@@ -298,7 +298,8 @@ router.route('/publish')
       }
       else {
         res.json({
-          /* TODO: parse the response to just grab what's needed */
+          /* TODO: parse the response to just grab what's needed 
+           * rather than sending everything to the client */
           responseBody: response,
           message: 'Tweet has been tweeted'
         });
