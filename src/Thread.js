@@ -97,12 +97,14 @@ export class Thread extends React.Component {
 
   handleTweetEdit(index, e) {
     var tweetid = this.state.tweets[index]._id;
+    var newText = e.target.value;
     var newTweet = {
       _id: tweetid,
-      text: e.target.value }
+      text: newText }
     var array = this.state.tweets
     array.splice(index, 1, newTweet)
     this.setState({tweets: array});
+    console.log(this.state.tweets[index]);
     axios.put(
         `${this.props.url}/${this.state.threadId}/${tweetid}`,
         newTweet,

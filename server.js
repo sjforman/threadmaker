@@ -184,7 +184,7 @@ router.route('/threads/:thread_id/:tweet_id')
       }
       else {
         var tweet = thread.tweets.id(req.params.tweet_id);
-        (req.body.text) ? tweet.text = req.body.text : null;
+        tweet.text = req.body.text;
           thread.save(function(err) {
             if (err) {
               res.send(err);
