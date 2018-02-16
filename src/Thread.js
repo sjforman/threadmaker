@@ -54,21 +54,6 @@ export class Thread extends React.Component {
       })
   }
 
-  /* TODO: Bug: currently, if you delete all the text from a tweet, you can't save it
-   * empty. */
-  handleTweetSubmit(index, e) {
-    var newtweet = this.state.tweets[index];
-    var tweetid = this.state.tweets[index]._id;
-    axios.put(
-        `${this.props.url}/${this.state.threadId}/${tweetid}`,
-        newtweet,
-        { 'x-auth-token': this.state.jwtToken }
-    )
-       .catch(err => {
-        console.error(err);
-      });
-  }
-
   onAddTweet() {
     var array = this.state.tweets;
     axios.post(
@@ -111,23 +96,24 @@ export class Thread extends React.Component {
   }
 
   handleTweetEdit(index, e) {
+    var tweetid = this.state.tweets[index]._id;
     var newTweet = {
-      _id: this.state.tweets[index]._id,
+      _id: tweetid,
       text: e.target.value }
     var array = this.state.tweets
     array.splice(index, 1, newTweet)
     this.setState({tweets: array});
+    axios.put(
+        `${this.props.url}/${this.state.threadId}/${tweetid}`,
+        newTweet,
+        { 'x-auth-token': this.state.jwtToken }
+      )
+      .catch(err => {
+        console.error(err);
+      });
   }
 
-  /* Seems like I should be able to parameterize this into a `moveTweet`
-   * function that takes an argument for direction. Tried, but couldn't
-   * figure out how to do that.*/
-
   moveTweetUp(index, e) {
-    /* TODO: componentize the "up" and "down" buttons
-     * and have their state depend on their position
-     * so as to disable them rather than allow them to be clicked
-     * when they shouldn't be */
     if (index > 0) {
       var threadid = this.state.threadId;
       var array = this.state.tweets;
@@ -208,7 +194,6 @@ export class Thread extends React.Component {
           deleteTweet={this.onDeleteTweet.bind(this, index)}
           publishTweet={this.onPublishTweet.bind(this, index)}
           handleTweetEdit={this.handleTweetEdit.bind(this, index)}
-          handleTweetSubmit={this.handleTweetSubmit.bind(this, index)}
           characterLimit={this.state.characterLimit}
           moveTweetDown={this.moveTweetDown.bind(this, index)}
           moveTweetUp={this.moveTweetUp.bind(this, index)}

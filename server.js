@@ -190,7 +190,7 @@ router.route('/threads/:thread_id/:tweet_id')
               res.send(err);
             }
             else {
-              res.json({ message: 'Tweet has been updated.'  });
+              res.json({ message: 'Tweet has been updated.' });
             }
           });
         }
