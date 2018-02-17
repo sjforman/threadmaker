@@ -47,6 +47,7 @@ export class Thread extends React.Component {
       headers: { 'x-auth-token': this.state.jwtToken }
     })
       .then(res => {
+        console.log(res.data.tweets);
         this.setState({ tweets: res.data.tweets })
       })
       .catch(err => {
@@ -55,6 +56,7 @@ export class Thread extends React.Component {
   }
 
   onAddTweet() {
+    /* is it necessary to initialize this var here? */
     var array = this.state.tweets;
     axios.post(
         `${this.props.url}/${this.state.threadId}`,
@@ -65,7 +67,9 @@ export class Thread extends React.Component {
       var tweet = {
         _id: res.data.tweet_id,
         key: res.data.tweet_id,
-        text: ''
+        text: '',
+        pubstatus: false,
+        publishedTweetId: ''
       }
       array.push(tweet)
       this.setState({tweets: array})
@@ -96,15 +100,19 @@ export class Thread extends React.Component {
   }
 
   handleTweetEdit(index, e) {
-    var tweetid = this.state.tweets[index]._id;
+    var tweet = this.state.tweets[index];
+    var tweetid = tweet._id;
     var newText = e.target.value;
     var newTweet = {
+      key: tweetid,
       _id: tweetid,
-      text: newText }
+      text: newText,
+      pubstatus: tweet.pubstatus,
+      publishedTweetId: tweet.publishedTweetId
+    }
     var array = this.state.tweets
     array.splice(index, 1, newTweet)
     this.setState({tweets: array});
-    console.log(this.state.tweets[index]);
     axios.put(
         `${this.props.url}/${this.state.threadId}/${tweetid}`,
         newTweet,
@@ -163,22 +171,23 @@ export class Thread extends React.Component {
         method: 'POST',
         url: 'http://localhost:3001/api/publish',
         data:  tweet,
-        headers: { 'x-auth-token': jwtToken, 
+        headers: { 'x-auth-token': jwtToken,
           'oauthToken' : oauthToken,
           'oauthSecret' : oauthSecret
         }
-    })
-    .then(function(response) {
-      /* TODO: handle the cases where response is not "all good" */
-      let publishedTweetId = JSON.parse(response.data.responseBody.body).id;
-      tweetArray[index].pubstatus = 'published';
-      tweetArray[index].publishedTweetId = publishedTweetId;
-    })
-    .catch(err => {
-      console.error(err);
-    });
+      })
+      .then(function(response) {
+        /* TODO: handle the cases where response is not "all good" */
+        let publishedTweetId = JSON.parse(response.data.responseBody.body).id;
+        tweetArray[index].pubstatus = 'published';
+        tweetArray[index].publishedTweetId = publishedTweetId;
+        /* Call handleTweetEdit here? Or just make another axios request? */
+      })
+      .catch(err => {
+        console.error(err);
+      });
+
     this.setState({tweets: tweetArray});
-    console.log(this.state.tweets);
   }
 
   componentDidMount() {

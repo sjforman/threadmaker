@@ -32,6 +32,7 @@ export class Tweet extends React.Component {
             value={this.props.text}
             onChange={this.props.handleTweetEdit}
           />
+          <p>{this.props.pubstatus}</p>
         </div>
       </div>
 

@@ -5,7 +5,10 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var TweetSchema = new Schema({
-  text: String
+  text: String,
+  pubstatus: Boolean,
+  publishedTweetId: String
+
 });
 
-module.exports = mongoose.model('Tweet', TweetSchema);
+module.exports = TweetSchema;

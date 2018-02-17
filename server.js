@@ -185,6 +185,8 @@ router.route('/threads/:thread_id/:tweet_id')
       else {
         var tweet = thread.tweets.id(req.params.tweet_id);
         tweet.text = req.body.text;
+        tweet.pubstatus = req.body.pubstatus;
+        tweet.publishedTweetId = req.body.publishedTweetId;
           thread.save(function(err) {
             if (err) {
               res.send(err);
@@ -233,17 +235,19 @@ router.route('/threads/:thread_id')
         res.send(err);
       }
       else {
-        var tweet = new Tweet();
-        tweet.text = '';
-        thread.tweets.push(tweet);
+        thread.tweets.push({
+          text: '',
+          pubstatus: false,
+          publishedTweetId: ''
+        });
         thread.save(function(err) {
           if (err) {
             res.send(err)
           }
           else {
             res.json({
-              thread: thread,
-              tweet_id: tweet.id,
+              /* The last tweet in the thread is the one just added. */
+              tweet_id: thread.tweets[thread.tweets.length - 1]._id,
               message: 'Tweet successfully added to thread.'
             });
           }
@@ -298,7 +302,7 @@ router.route('/publish')
       }
       else {
         res.json({
-          /* TODO: parse the response to just grab what's needed 
+          /* TODO: parse the response to just grab what's needed
            * rather than sending everything to the client */
           responseBody: response,
           message: 'Tweet has been tweeted'
