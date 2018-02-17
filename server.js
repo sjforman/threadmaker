@@ -183,10 +183,12 @@ router.route('/threads/:thread_id/:tweet_id')
         res.send(err);
       }
       else {
+        //console.log(req.body);
         var tweet = thread.tweets.id(req.params.tweet_id);
         tweet.text = req.body.text;
         tweet.pubstatus = req.body.pubstatus;
         tweet.publishedTweetId = req.body.publishedTweetId;
+        console.log(tweet);
           thread.save(function(err) {
             if (err) {
               res.send(err);
