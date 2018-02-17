@@ -183,12 +183,10 @@ router.route('/threads/:thread_id/:tweet_id')
         res.send(err);
       }
       else {
-        //console.log(req.body);
         var tweet = thread.tweets.id(req.params.tweet_id);
         tweet.text = req.body.text;
         tweet.pubstatus = req.body.pubstatus;
         tweet.publishedTweetId = req.body.publishedTweetId;
-        console.log(tweet);
           thread.save(function(err) {
             if (err) {
               res.send(err);
@@ -298,7 +296,7 @@ router.route('/publish')
       access_token_key: req.headers.oauthtoken,
       access_token_secret: req.headers.oauthsecret
     });
-    twitterClient.post('statuses/update', {status: req.body.text}, function(error, tweet, response) {
+    twitterClient.post('statuses/update', {status: req.body.text, in_reply_to_status_id: false}, function(error, tweet, response) {
       if (error) {
         res.send(error)
       }

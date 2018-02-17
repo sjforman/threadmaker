@@ -12,6 +12,9 @@ class ThreadContainer extends React.Component {
         <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 mr1 dib mid-gray" href="#" onClick={this.props.addTweet}>
         Add tweet
         </button>
+        <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 mr1 dib mid-gray" href="#" onClick={this.props.publishThread}>
+        Publish thread
+        </button>
       </div>
       <div>
         {this.props.children}
@@ -35,6 +38,7 @@ export class Thread extends React.Component {
     this.onAddTweet = this.onAddTweet.bind(this);
     this.onDeleteTweet = this.onDeleteTweet.bind(this);
     this.onPublishTweet = this.onPublishTweet.bind(this);
+    this.onPublishThread = this.onPublishThread.bind(this);
     this.handleTweetEdit = this.handleTweetEdit.bind(this);
     this.moveTweetDown = this.moveTweetDown.bind(this);
     this.moveTweetUp = this.moveTweetUp.bind(this);
@@ -158,6 +162,18 @@ export class Thread extends React.Component {
     }
   }
 
+  onPublishThread() {
+    console.log(this.state);
+    let threadId = this.state.threadId;
+    console.log('Starting publication of thread id: ' + threadId);
+    /* For each tweet in the thread, publish that tweet, 
+     * retrieve the id of the now-published tweet, 
+     * then publish the next one in line, setting
+     * "in-reply to" to the previously published tweet. 
+     */
+
+  }
+
   onPublishTweet(index, e) {
     let tweet = this.state.tweets[index];
     let tweetArray = this.state.tweets;
@@ -225,6 +241,7 @@ export class Thread extends React.Component {
         addTweet={this.onAddTweet}
         deleteTweet={this.onDeleteTweet.bind(this)}
         onPublishTweet={this.onPublishTweet.bind(this)}
+        publishThread={this.onPublishThread.bind(this)}
         handleTweetEdit={this.handleTweetEdit.bind(this)}
         characterLimit={this.state.characterLimit}
         moveTweetDown={this.moveTweetDown.bind(this)}
