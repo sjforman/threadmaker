@@ -31,8 +31,6 @@ export class Thread extends React.Component {
       threadId: this.props.thread_id
     };
 
-    /* TODO: persist character limit as a property of the thread */
-
     this.loadTweetsFromServer = this.loadTweetsFromServer.bind(this);
     this.onAddTweet = this.onAddTweet.bind(this);
     this.onDeleteTweet = this.onDeleteTweet.bind(this);
@@ -47,7 +45,6 @@ export class Thread extends React.Component {
       headers: { 'x-auth-token': this.state.jwtToken }
     })
       .then(res => {
-        console.log(res.data.tweets);
         this.setState({ tweets: res.data.tweets })
       })
       .catch(err => {
@@ -167,6 +164,7 @@ export class Thread extends React.Component {
     let jwtToken = this.state.jwtToken;
     let oauthToken = localStorage.getItem('oauthToken');
     let oauthSecret = localStorage.getItem('oauthSecret');
+    var that = this;
     axios({
         method: 'POST',
         url: 'http://localhost:3001/api/publish',
@@ -179,15 +177,22 @@ export class Thread extends React.Component {
       .then(function(response) {
         /* TODO: handle the cases where response is not "all good" */
         let publishedTweetId = JSON.parse(response.data.responseBody.body).id;
+        console.log(publishedTweetId);
         tweetArray[index].pubstatus = 'published';
         tweetArray[index].publishedTweetId = publishedTweetId;
-        /* Call handleTweetEdit here? Or just make another axios request? */
+        that.setState({tweets: tweetArray});
+        axios.put(
+          `${that.props.url}/${that.state.threadId}/${tweet._id}`,
+          tweetArray[index],
+          { 'x-auth-token': that.state.jwtToken }
+        )
+        .catch(err => {
+          console.error(err);
+        });
       })
       .catch(err => {
         console.error(err);
       });
-
-    this.setState({tweets: tweetArray});
   }
 
   componentDidMount() {
@@ -202,13 +207,15 @@ export class Thread extends React.Component {
           key={tweet._id}
           id={tweet._id}
           index={index}
+          text={tweet.text}
+          pubStatus={tweet.pubstatus}
           deleteTweet={this.onDeleteTweet.bind(this, index)}
-          publishTweet={this.onPublishTweet.bind(this, index)}
+          onPublishTweet={this.onPublishTweet.bind(this, index)}
           handleTweetEdit={this.handleTweetEdit.bind(this, index)}
           characterLimit={this.state.characterLimit}
           moveTweetDown={this.moveTweetDown.bind(this, index)}
           moveTweetUp={this.moveTweetUp.bind(this, index)}
-          text={tweet.text}/>
+        />
       )
     })
 
@@ -217,7 +224,7 @@ export class Thread extends React.Component {
       <ThreadContainer
         addTweet={this.onAddTweet}
         deleteTweet={this.onDeleteTweet.bind(this)}
-        publishTweet={this.onPublishTweet.bind(this)}
+        onPublishTweet={this.onPublishTweet.bind(this)}
         handleTweetEdit={this.handleTweetEdit.bind(this)}
         characterLimit={this.state.characterLimit}
         moveTweetDown={this.moveTweetDown.bind(this)}
