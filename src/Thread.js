@@ -163,18 +163,27 @@ export class Thread extends React.Component {
   }
 
   onPublishThread() {
-    console.log(this.state);
-    let threadId = this.state.threadId;
-    console.log('Starting publication of thread id: ' + threadId);
-    /* For each tweet in the thread, publish that tweet, 
-     * retrieve the id of the now-published tweet, 
-     * then publish the next one in line, setting
-     * "in-reply to" to the previously published tweet. 
-     */
+    var numTweetsToPublish = this.state.tweets.length;
+    var indexOfTweet = 0;
+    var numTweetsPublished = 0;
 
+    var that = this;
+
+    that.onPublishTweet(indexOfTweet, null, null,
+      function(id) {
+        indexOfTweet++;
+        console.log('executing callback. publishing tweet: ' + indexOfTweet);
+        numTweetsPublished++;
+        console.log('number of Tweets published: ' + numTweetsPublished);
+        if (numTweetsPublished < numTweetsToPublish) {
+          that.onPublishTweet(indexOfTweet, null, id.toString() )
+        }
+      }
+    );
   }
 
-  onPublishTweet(index, e) {
+  /* Add a "parent" parameter to this function? */
+  onPublishTweet(index, e, parentId, callback) {
     let tweet = this.state.tweets[index];
     let tweetArray = this.state.tweets;
     let jwtToken = this.state.jwtToken;
@@ -184,7 +193,10 @@ export class Thread extends React.Component {
     axios({
         method: 'POST',
         url: 'http://localhost:3001/api/publish',
-        data:  tweet,
+        data:  {
+          tweet: tweet,
+          parentId: parentId
+        },
         headers: { 'x-auth-token': jwtToken,
           'oauthToken' : oauthToken,
           'oauthSecret' : oauthSecret
@@ -192,8 +204,7 @@ export class Thread extends React.Component {
       })
       .then(function(response) {
         /* TODO: handle the cases where response is not "all good" */
-        let publishedTweetId = JSON.parse(response.data.responseBody.body).id;
-        console.log(publishedTweetId);
+        let publishedTweetId = JSON.parse(response.data.responseBody.body).id_str;
         tweetArray[index].pubstatus = 'published';
         tweetArray[index].publishedTweetId = publishedTweetId;
         that.setState({tweets: tweetArray});
@@ -205,6 +216,9 @@ export class Thread extends React.Component {
         .catch(err => {
           console.error(err);
         });
+        if (callback) {
+          callback(publishedTweetId);
+        }
       })
       .catch(err => {
         console.error(err);

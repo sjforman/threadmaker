@@ -284,20 +284,22 @@ router.route('/threads/:thread_id')
     })
   })
 
-//require('request').debug = true
-
-var jsonParser = bodyParser.json();
-
 router.route('/publish')
-  .post((req, res, next) => {
+  .post((req, res) => {
     var twitterClient = new twitter({
       consumer_key: twitterConfig.consumerKey,
       consumer_secret: twitterConfig.consumerSecret,
       access_token_key: req.headers.oauthtoken,
       access_token_secret: req.headers.oauthsecret
     });
-    twitterClient.post('statuses/update', {status: req.body.text, in_reply_to_status_id: false}, function(error, tweet, response) {
+    twitterClient.post('statuses/update', 
+      {
+        status: req.body.tweet.text,
+        in_reply_to_status_id: req.body.parentId,
+        auto_populate_reply_metadata: true
+      }, function(error, tweet, response) {
       if (error) {
+        console.log(error);
         res.send(error)
       }
       else {
