@@ -169,12 +169,18 @@ export class Thread extends React.Component {
 
     var that = this;
 
+    /* call onPublishTweet with index = 0 and null parentId,
+     * and give it a callback that increments the index and
+     * counter, and in turn calls onPublishTweet again, with
+     * itself as the callback. */
+
     var callback = function(id) {
       indexOfTweet++;
       numTweetsPublished++;
       if (numTweetsPublished < numTweetsToPublish) {
         that.onPublishTweet(indexOfTweet, null, id, callback)
       }
+      /* TODO: Handle the case where one of them fails. */
     }
     that.onPublishTweet(indexOfTweet, null, null, callback);
   }
@@ -235,6 +241,7 @@ export class Thread extends React.Component {
           index={index}
           text={tweet.text}
           pubStatus={tweet.pubstatus}
+          publishedTweetId={tweet.publishedTweetId}
           deleteTweet={this.onDeleteTweet.bind(this, index)}
           onPublishTweet={this.onPublishTweet.bind(this, index)}
           handleTweetEdit={this.handleTweetEdit.bind(this, index)}
