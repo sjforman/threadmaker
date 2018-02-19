@@ -242,6 +242,7 @@ export class Thread extends React.Component {
           text={tweet.text}
           pubStatus={tweet.pubstatus}
           publishedTweetId={tweet.publishedTweetId}
+          screenName={localStorage.getItem('screenName')}
           deleteTweet={this.onDeleteTweet.bind(this, index)}
           onPublishTweet={this.onPublishTweet.bind(this, index)}
           handleTweetEdit={this.handleTweetEdit.bind(this, index)}

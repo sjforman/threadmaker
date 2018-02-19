@@ -28,7 +28,7 @@ UserSchema.statics.upsertTwitterUser = function(token, tokenSecret, profile, cal
   return this.findOne({
     'twitterProvider.id' : profile.id
   }, function(err, user) {
-    if (!user || profile.username != user.twitterProvider.screen_name) {
+    if (!user) {
       var newUser = new that({
         twitterProvider: {
           id: profile.id,

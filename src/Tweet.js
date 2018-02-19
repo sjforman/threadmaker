@@ -17,8 +17,8 @@ class CharacterCounter extends React.Component {
 class TweetLink extends React.Component {
   render() {
     let baseURL = 'https://twitter.com/';
-    let userHandle = 'testAcct2018'
-    let URL = baseURL + userHandle + '/' + this.props.publishedTweetId + '/status/';
+    let userHandle = this.props.screenName;
+    let URL = baseURL + userHandle + '/status/' + this.props.publishedTweetId;
   return(
     <a href={URL}>{URL}</a>
   )}
@@ -63,7 +63,7 @@ export class Tweet extends React.Component {
           (
           <div className="fl w-100 pa2">
             <p className="w-100 f3 db hover-black ba1 b--light-gray pa2 br2 mb2 h3">{this.props.text}</p>
-            <TweetLink publishedTweetId={this.props.publishedTweetId} />
+            <TweetLink screenName={this.props.screenName} publishedTweetId={this.props.publishedTweetId} />
           </div>
         )}
           </div>
