@@ -7,7 +7,7 @@ var Schema = mongoose.Schema;
 var UserSchema = new Schema({
   twitterProvider: {
     type: {
-      id: String, 
+      id: String,
       screen_name: String,
       token: String
     }
@@ -28,12 +28,12 @@ UserSchema.statics.upsertTwitterUser = function(token, tokenSecret, profile, cal
   return this.findOne({
     'twitterProvider.id' : profile.id
   }, function(err, user) {
-    if (!user) {
+    if (!user || profile.username != user.twitterProvider.screen_name) {
       var newUser = new that({
         twitterProvider: {
           id: profile.id,
           screen_name: profile.username,
-          token: token, 
+          token: token,
           tokenSecret: tokenSecret
         }
       });
@@ -43,8 +43,10 @@ UserSchema.statics.upsertTwitterUser = function(token, tokenSecret, profile, cal
         }
         return callback(error, savedUser);
       });
-    }  else {
-    return callback(err, user);
+    }
+    else
+    {
+      return callback(err, user);
     }
   });
 }

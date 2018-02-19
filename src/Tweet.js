@@ -19,7 +19,6 @@ class TweetLink extends React.Component {
     let baseURL = 'https://twitter.com/';
     let userHandle = 'testAcct2018'
     let URL = baseURL + userHandle + '/' + this.props.publishedTweetId + '/status/';
-    console.log(URL)
   return(
     <a href={URL}>{URL}</a>
   )}
