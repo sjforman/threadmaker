@@ -169,20 +169,16 @@ export class Thread extends React.Component {
 
     var that = this;
 
-    that.onPublishTweet(indexOfTweet, null, null,
-      function(id) {
-        indexOfTweet++;
-        console.log('executing callback. publishing tweet: ' + indexOfTweet);
-        numTweetsPublished++;
-        console.log('number of Tweets published: ' + numTweetsPublished);
-        if (numTweetsPublished < numTweetsToPublish) {
-          that.onPublishTweet(indexOfTweet, null, id.toString() )
-        }
+    var callback = function(id) {
+      indexOfTweet++;
+      numTweetsPublished++;
+      if (numTweetsPublished < numTweetsToPublish) {
+        that.onPublishTweet(indexOfTweet, null, id, callback)
       }
-    );
+    }
+    that.onPublishTweet(indexOfTweet, null, null, callback);
   }
 
-  /* Add a "parent" parameter to this function? */
   onPublishTweet(index, e, parentId, callback) {
     let tweet = this.state.tweets[index];
     let tweetArray = this.state.tweets;
