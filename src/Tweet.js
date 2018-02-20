@@ -62,7 +62,7 @@ export class Tweet extends React.Component {
         ) :
           (
           <div className="fl w-100 pa2">
-            <p className="w-100 f3 db hover-black ba1 b--light-gray pa2 br2 mb2 h3">{this.props.text}</p>
+            <p className="w-100 f3 db hover-black ba1 b--light-gray pa2 br2 mb2 pre">{this.props.text}</p>
             <TweetLink screenName={this.props.screenName} publishedTweetId={this.props.publishedTweetId} />
           </div>
         )}
