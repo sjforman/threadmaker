@@ -9,7 +9,7 @@ class ThreadContainer extends React.Component {
     <div>
       <Header />
       <div id="buttons" className="tc mb4">
-        <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 mr1 dib mid-gray" href="#" onClick={this.props.addTweet}>
+        <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 mr1 dib mid-gray" href="#" onClick={this.props.addTweet.bind(this, this.props.tweetCount)}>
         Add tweet
         </button>
         <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 mr1 dib mid-gray" href="#" onClick={this.props.publishThread}>
@@ -56,19 +56,22 @@ export class Thread extends React.Component {
       })
   }
 
-  onAddTweet() {
-    /* is it necessary to initialize this var here? */
+  onAddTweet(index) {
     var array = this.state.tweets;
+    var prefix = (index + 1).toString() + '/ '
+    console.log(prefix);
     axios.post(
-        `${this.props.url}/${this.state.threadId}`,
-        {},
-        { 'x-auth-token': this.state.jwtToken }
+      `${this.props.url}/${this.state.threadId}`,
+      {prefix: prefix},
+      { 'x-auth-token': this.state.jwtToken }
     )
     .then(res => {
       var tweet = {
         _id: res.data.tweet_id,
         key: res.data.tweet_id,
         text: '',
+        prefix: prefix,
+        postfix: '',
         pubstatus: false,
         publishedTweetId: ''
       }
@@ -108,6 +111,8 @@ export class Thread extends React.Component {
       key: tweetid,
       _id: tweetid,
       text: newText,
+      prefix: tweet.prefix,
+      postfix: '',
       pubstatus: tweet.pubstatus,
       publishedTweetId: tweet.publishedTweetId
     }
@@ -126,11 +131,15 @@ export class Thread extends React.Component {
 
   moveTweetUp(index, e) {
     if (index > 0) {
+      console.log(this.state.tweets);
       var threadid = this.state.threadId;
       var array = this.state.tweets;
       var tweetToMove = array[index];
+      var tmp = tweetToMove.prefix;
+      tweetToMove.prefix = array[index-1].prefix;
       array[index] = array[index - 1];
       array[index - 1] = tweetToMove;
+      array[index].prefix = tmp;
       this.setState({tweets: array});
       axios.put(
         `${this.props.url}/${threadid}`,
@@ -148,8 +157,11 @@ export class Thread extends React.Component {
       var threadid = this.state.threadId;
       var array = this.state.tweets;
       var tweetToMove = array[index];
+      var tmp = tweetToMove.prefix;
+      tweetToMove.prefix = array[index + 1].prefix;
       array[index] = array[index + 1];
       array[index + 1] = tweetToMove;
+      array[index].prefix = tmp;
       this.setState({tweets: array});
       axios.put(
         `${this.props.url}/${threadid}`,
@@ -240,6 +252,8 @@ export class Thread extends React.Component {
           id={tweet._id}
           index={index}
           text={tweet.text}
+          prefix={tweet.prefix}
+          postfix={tweet.postfix}
           pubStatus={tweet.pubstatus}
           publishedTweetId={tweet.publishedTweetId}
           screenName={localStorage.getItem('screenName')}
@@ -253,9 +267,11 @@ export class Thread extends React.Component {
       )
     })
 
+
     return (
       <div>
       <ThreadContainer
+        tweetCount={this.state.tweets.length}
         addTweet={this.onAddTweet}
         deleteTweet={this.onDeleteTweet.bind(this)}
         onPublishTweet={this.onPublishTweet.bind(this)}

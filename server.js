@@ -237,6 +237,8 @@ router.route('/threads/:thread_id')
       else {
         thread.tweets.push({
           text: '',
+          prefix: req.body.prefix,
+          postfix: '',
           pubstatus: false,
           publishedTweetId: ''
         });
