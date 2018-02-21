@@ -296,7 +296,7 @@ router.route('/publish')
     });
     twitterClient.post('statuses/update', 
       {
-        status: req.body.tweet.text,
+        status: req.body.tweet.prefix + req.body.tweet.text,
         in_reply_to_status_id: req.body.parentId,
         auto_populate_reply_metadata: true
       }, function(error, tweet, response) {

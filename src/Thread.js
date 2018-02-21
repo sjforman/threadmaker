@@ -218,9 +218,12 @@ export class Thread extends React.Component {
       })
       .then(function(response) {
         /* TODO: handle the cases where response is not "all good" */
-        let publishedTweetId = JSON.parse(response.data.responseBody.body).id_str;
+        let publishedTweet = JSON.parse(response.data.responseBody.body);
+        let publishedTweetId = publishedTweet.id_str;
         tweetArray[index].pubstatus = 'published';
-        tweetArray[index].publishedTweetId = publishedTweetId;
+        tweetArray[index].publishedTweetId = publishedTweet.id;
+        tweetArray[index].text = publishedTweet.text;
+        tweetArray[index].prefix = '';
         that.setState({tweets: tweetArray});
         axios.put(
           `${that.props.url}/${that.state.threadId}/${tweet._id}`,
