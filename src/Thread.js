@@ -58,11 +58,9 @@ export class Thread extends React.Component {
 
   onAddTweet(index) {
     var array = this.state.tweets;
-    var prefix = (index + 1).toString() + '/ '
-    console.log(prefix);
     axios.post(
       `${this.props.url}/${this.state.threadId}`,
-      {prefix: prefix},
+      {},
       { 'x-auth-token': this.state.jwtToken }
     )
     .then(res => {
@@ -70,13 +68,13 @@ export class Thread extends React.Component {
         _id: res.data.tweet_id,
         key: res.data.tweet_id,
         text: '',
-        prefix: prefix,
+        prefix: '',
         postfix: '',
         pubstatus: false,
         publishedTweetId: ''
       }
       array.push(tweet)
-      this.setState({tweets: array})
+      this.handleThreadChange();
     })
     .catch(err => {
       console.error(err);
@@ -84,23 +82,10 @@ export class Thread extends React.Component {
   }
 
   onDeleteTweet(index, e) {
-    /* feels wrong to re-declare threadid in each function
-     * like there should be some way to declare once?
-     * Maybe it should be passed into the function as an argument? */
-    var threadid = this.state.threadId;
     var array = this.state.tweets;
-    var tweetid = this.state.tweets[index]._id;
     array.splice(index, 1);
     this.setState({tweets: array})
-    /* TODO: would it be better to `put` the thread instead of
-     * deleting the specific tweet? */
-    axios.delete(
-      `${this.props.url}/${threadid}/${tweetid}`,
-      { 'x-auth-token': this.state.jwtToken }
-    )
-      .catch(err => {
-        console.error(err);
-      });
+    this.handleThreadChange();
   }
 
   handleTweetEdit(index, e) {
@@ -112,7 +97,7 @@ export class Thread extends React.Component {
       _id: tweetid,
       text: newText,
       prefix: tweet.prefix,
-      postfix: '',
+      postfix: tweet.postfix,
       pubstatus: tweet.pubstatus,
       publishedTweetId: tweet.publishedTweetId
     }
@@ -131,47 +116,44 @@ export class Thread extends React.Component {
 
   moveTweetUp(index, e) {
     if (index > 0) {
-      console.log(this.state.tweets);
-      var threadid = this.state.threadId;
+      this.handleThreadChange();
       var array = this.state.tweets;
       var tweetToMove = array[index];
-      var tmp = tweetToMove.prefix;
-      tweetToMove.prefix = array[index-1].prefix;
       array[index] = array[index - 1];
       array[index - 1] = tweetToMove;
-      array[index].prefix = tmp;
-      this.setState({tweets: array});
-      axios.put(
-        `${this.props.url}/${threadid}`,
-        array,
-        { 'x-auth-token': this.state.jwtToken }
-      )
-        .catch(err => {
-          console.error(err);
-        });
+      this.handleThreadChange();
     }
   }
 
   moveTweetDown(index, e) {
     if (index + 1 < this.state.tweets.length) {
-      var threadid = this.state.threadId;
       var array = this.state.tweets;
       var tweetToMove = array[index];
-      var tmp = tweetToMove.prefix;
-      tweetToMove.prefix = array[index + 1].prefix;
       array[index] = array[index + 1];
       array[index + 1] = tweetToMove;
-      array[index].prefix = tmp;
-      this.setState({tweets: array});
-      axios.put(
-        `${this.props.url}/${threadid}`,
-        array,
-        { 'x-auth-token': this.state.jwtToken }
-      )
-        .catch(err => {
-          console.error(err);
-        });
+      this.handleThreadChange();
     }
+  }
+
+  handleThreadChange() {
+    var threadid = this.state.threadId;
+    var array = this.state.tweets;
+    for (var i = 0; i < this.state.tweets.length; i++) {
+      array[i].prefix = (i + 1).toString() + '/ ';
+      array[i].postfix = '';
+    }
+    if (array.length > 2) {
+      array[array.length - 1].postfix = ' /end';
+    }
+    this.setState({tweets: array});
+    axios.put(
+      `${this.props.url}/${threadid}`,
+      array,
+      { 'x-auth-token': this.state.jwtToken }
+    )
+    .catch(err => {
+        console.error(err);
+    });
   }
 
   onPublishThread() {

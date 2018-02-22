@@ -238,7 +238,7 @@ router.route('/threads/:thread_id')
         thread.tweets.push({
           text: '',
           prefix: req.body.prefix,
-          postfix: '',
+          postfix: req.body.postfix,
           pubstatus: false,
           publishedTweetId: ''
         });
@@ -296,7 +296,7 @@ router.route('/publish')
     });
     twitterClient.post('statuses/update', 
       {
-        status: req.body.tweet.prefix + req.body.tweet.text,
+        status: req.body.tweet.prefix + req.body.tweet.text + req.body.tweet.postfix,
         in_reply_to_status_id: req.body.parentId,
         auto_populate_reply_metadata: true
       }, function(error, tweet, response) {

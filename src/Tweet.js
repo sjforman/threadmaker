@@ -43,10 +43,11 @@ export class Tweet extends React.Component {
         <div className="fl w-100 w-80-ns pa2">
             <span className="fl w-10 f3">{this.props.prefix}</span>
             <textarea
-              className="fl w-90 f3 db hover-black ba1 b--light-gray br2 mb2 h4 overflow-auto"
+              className="fl w-80 f3 db hover-black ba1 b--light-gray br2 mb2 h4 overflow-auto"
               value={this.props.text}
               onChange={this.props.handleTweetEdit}
             />
+            <span className="fl w-10 f3">{this.props.postfix}</span>
         </div>
 
           <div className="fl w-100 w-10-ns pa2">
