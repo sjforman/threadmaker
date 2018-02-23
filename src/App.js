@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Thread } from './Thread';
 import { Home } from './Home';
+import { Dashboard } from './Dashboard';
 
 class App extends Component {
   render() {
@@ -10,6 +11,7 @@ class App extends Component {
     <Router>
       <div>
         <Route exact path="/" component={Home}/>
+        <Route exact path="/dashboard" component={Dashboard}/>
         <Route path="/thread/:thread_id" render={({match})=>
           <Thread
             match={match}
