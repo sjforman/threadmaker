@@ -34,22 +34,20 @@ class App extends Component {
         <Route exact path="/dashboard" render={()=>(
           !this.state.isAuthenticated ? (
             <Redirect to="/"/>
-          ) : (
-          <Dashboard/>
-          )
+            ) : (
+            <Dashboard/>
+            )
         )}/>
         <Route path="/thread/:thread_id" render={({match})=>
           !this.state.isAuthenticated ? (
             <Redirect to="/"/>
-          ) : (
-          <Thread
-            match={match}
-            pollInterval={2000}
-            thread_id={match.params.thread_id}
-            url='http://localhost:3001/api/threads'
-          />
-          )
-        }/>
+            ) : (
+            <Thread
+              match={match}
+              pollInterval={2000}
+              thread_id={match.params.thread_id}
+              url='http://localhost:3001/api/threads'/>
+        )}/>
       </div>
     </Router>
     );
