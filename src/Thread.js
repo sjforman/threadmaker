@@ -203,7 +203,7 @@ export class Thread extends React.Component {
         let publishedTweet = JSON.parse(response.data.responseBody.body);
         let publishedTweetId = publishedTweet.id_str;
         tweetArray[index].pubstatus = 'published';
-        tweetArray[index].publishedTweetId = publishedTweet.id;
+        tweetArray[index].publishedTweetId = publishedTweetId;
         tweetArray[index].text = publishedTweet.text;
         tweetArray[index].prefix = '';
         that.setState({tweets: tweetArray});
