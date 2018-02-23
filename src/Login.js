@@ -1,5 +1,4 @@
 import React from 'react';
-import { Redirect } from 'react-router';
 import TwitterLogin from 'react-twitter-auth/lib/react-twitter-auth-component.js';
 
 export class Login extends React.Component {
@@ -17,8 +16,6 @@ export class Login extends React.Component {
     else {
       let screenName = localStorage.getItem('screenName');
       this.setState({isAuthenticated: true, screenName: screenName });
-      console.log(this.props.location);
-      console.log(this.props.history);
     }
   }
 
@@ -45,7 +42,6 @@ export class Login extends React.Component {
   logout() {
     this.setState({ isAuthenticated: false, screenName: null });
     localStorage.clear();
-    this.props.history.push('/');
   }
 
   componentWillMount() {
