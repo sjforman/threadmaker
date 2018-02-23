@@ -20,7 +20,13 @@ class TweetLink extends React.Component {
     let userHandle = this.props.screenName;
     let URL = baseURL + userHandle + '/status/' + this.props.publishedTweetId;
   return(
-    <a href={URL}>{URL}</a>
+    <div>
+      <a className="link black bg-animate hover-blue" href={URL}>
+        <svg className="w1" viewBox="0 0 32 32">
+          <path d="M4 4 L12 4 L12 8 L8 8 L8 24 L24 24 L24 20 L28 20 L28 28 L4 28 z M16 4 L28 4 L28 16 L24 12 L16 20 L12 16 L20 8z"></path>
+        </svg>
+      </a>
+    </div>
   )}
 }
 
@@ -64,10 +70,16 @@ export class Tweet extends React.Component {
         </div>
         ) :
           (
-          <div className="fl w-100 pa2">
-            <p className="w-100 f3 db hover-black ba1 b--light-gray pa2 br2 mb2 pre">{this.props.text}</p>
-            <TweetLink screenName={this.props.screenName} publishedTweetId={this.props.publishedTweetId} />
+        <div className="mw9 center ph3-ns ba1 b--light-gray">
+          <div className="ph2-ns">
+            <div className="fl w-90">
+              <p className="f3 pa2">{this.props.text}</p>
+            </div>
+            <div className="fl w-10 pa2 mt4">
+              <TweetLink screenName={this.props.screenName} publishedTweetId={this.props.publishedTweetId} />
+            </div>
           </div>
+        </div>
         )}
           </div>
          </div>
