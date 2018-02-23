@@ -177,7 +177,7 @@ router.route('/threads/:thread_id/:tweet_id')
       }
     });
   })
-  .put(function(req, res) {
+  .put(authenticate, function(req, res) {
     Thread.findById(req.params.thread_id, function(err, thread) {
       if (err) {
         res.send(err);
@@ -198,7 +198,7 @@ router.route('/threads/:thread_id/:tweet_id')
         }
       });
     })
-  .delete(function(req, res) {
+  .delete(authenticate, function(req, res) {
     Thread.findById(req.params.thread_id, function(err, thread) {
     if (err) {
       res.send(err);
@@ -219,7 +219,7 @@ router.route('/threads/:thread_id/:tweet_id')
   });
 
 router.route('/threads/:thread_id')
-  .get(function(req, res) {
+  .get(authenticate, function(req, res) {
     Thread.findById(req.params.thread_id, function(err, thread) {
       if (err) {
         res.send(err);
@@ -229,7 +229,7 @@ router.route('/threads/:thread_id')
       }
     });
   })
-  .post(function(req, res) {
+  .post(authenticate, function(req, res) {
     Thread.findById(req.params.thread_id, function(err, thread) {
       if (err) {
         res.send(err);
@@ -257,7 +257,7 @@ router.route('/threads/:thread_id')
       }
     });
   })
-  .put(function(req, res) {
+  .put(authenticate, function(req, res) {
     Thread.findById(req.params.thread_id, function(err, thread) {
       if (err) {
         res.send(err)
@@ -275,7 +275,7 @@ router.route('/threads/:thread_id')
       }
     })
   })
-  .delete(function(req, res) {
+  .delete(authenticate, function(req, res) {
     Thread.remove({_id: req.params.thread_id}, function (err, thread) {
       if (err) {
         res.send(err);
@@ -287,7 +287,7 @@ router.route('/threads/:thread_id')
   })
 
 router.route('/publish')
-  .post((req, res) => {
+  .post(authenticate, (req, res) => {
     var twitterClient = new twitter({
       consumer_key: twitterConfig.consumerKey,
       consumer_secret: twitterConfig.consumerSecret,

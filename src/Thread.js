@@ -58,11 +58,10 @@ export class Thread extends React.Component {
 
   onAddTweet(index) {
     var array = this.state.tweets;
-    axios.post(
-      `${this.props.url}/${this.state.threadId}`,
-      {},
-      { 'x-auth-token': this.state.jwtToken }
-    )
+    axios({ method: 'POST',
+            url: `${this.props.url}/${this.state.threadId}`,
+            headers: { 'x-auth-token': this.state.jwtToken }
+          })
     .then(res => {
       var tweet = {
         _id: res.data.tweet_id,
@@ -104,14 +103,14 @@ export class Thread extends React.Component {
     var array = this.state.tweets
     array.splice(index, 1, newTweet)
     this.setState({tweets: array});
-    axios.put(
-        `${this.props.url}/${this.state.threadId}/${tweetid}`,
-        newTweet,
-        { 'x-auth-token': this.state.jwtToken }
-      )
-      .catch(err => {
-        console.error(err);
-      });
+    axios({ method: 'PUT',
+            url: `${this.props.url}/${this.state.threadId}/${tweetid}`,
+            data: newTweet,
+            headers: { 'x-auth-token': this.state.jwtToken }
+    })
+    .catch(err => {
+      console.error(err);
+    });
   }
 
   moveTweetUp(index, e) {
@@ -146,11 +145,11 @@ export class Thread extends React.Component {
       array[array.length - 1].postfix = ' /end';
     }
     this.setState({tweets: array});
-    axios.put(
-      `${this.props.url}/${threadid}`,
-      array,
-      { 'x-auth-token': this.state.jwtToken }
-    )
+    axios({ method: 'PUT',
+            url: `${this.props.url}/${threadid}`,
+            data: array,
+            headers: { 'x-auth-token': this.state.jwtToken }
+    })
     .catch(err => {
         console.error(err);
     });
@@ -207,11 +206,12 @@ export class Thread extends React.Component {
         tweetArray[index].text = publishedTweet.text;
         tweetArray[index].prefix = '';
         that.setState({tweets: tweetArray});
-        axios.put(
-          `${that.props.url}/${that.state.threadId}/${tweet._id}`,
-          tweetArray[index],
-          { 'x-auth-token': that.state.jwtToken }
-        )
+        axios({
+          method: 'PUT',
+          url: `${that.props.url}/${that.state.threadId}/${tweet._id}`,
+          data: tweetArray[index],
+          headers: { 'x-auth-token': that.state.jwtToken }
+        })
         .catch(err => {
           console.error(err);
         });
