@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router';
 import { Login } from './Login';
 import logo from './logo.svg';
+
+const LoginWithRouter = withRouter(Login);
 
 export class Home extends Component {
   render() {
@@ -22,7 +25,7 @@ export class Home extends Component {
         </div>
 
         <div className="pa5 tc">
-          <Login />
+          <LoginWithRouter />
         </div>
 
       </div>
