@@ -33,6 +33,9 @@ export class Login extends React.Component {
         localStorage.setItem('oauthVerifier', user.twitterProvider.oauth_verifier);
       }
     })
+    .then(() => {
+      this.props.history.push('/dashboard');
+    });
   }
 
   onFailure(error) {
@@ -42,10 +45,11 @@ export class Login extends React.Component {
   logout() {
     this.setState({ isAuthenticated: false, screenName: null });
     localStorage.clear();
+    this.props.history.push('/');
   }
 
   componentWillMount() {
-    this.loadUserFromToken()
+    this.loadUserFromToken();
   }
 
   render() {

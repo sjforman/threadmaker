@@ -7,7 +7,7 @@ class ThreadContainer extends React.Component {
   render() {
     return (
     <div>
-      <Header />
+      <Header history={this.props.history}/>
       <div id="buttons" className="tc mb4">
         <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 mr1 dib mid-gray" href="#" onClick={this.props.addTweet.bind(this, this.props.tweetCount)}>
         Add tweet
@@ -42,6 +42,7 @@ export class Thread extends React.Component {
     this.handleTweetEdit = this.handleTweetEdit.bind(this);
     this.moveTweetDown = this.moveTweetDown.bind(this);
     this.moveTweetUp = this.moveTweetUp.bind(this);
+
   }
 
   loadTweetsFromServer() {
@@ -229,7 +230,6 @@ export class Thread extends React.Component {
   }
 
   render() {
-
     var tweets = this.state.tweets.map((tweet, index) => {
       return (
         <Tweet
@@ -258,6 +258,7 @@ export class Thread extends React.Component {
       <ThreadContainer
         tweetCount={this.state.tweets.length}
         addTweet={this.onAddTweet}
+        history={this.props.history}
         deleteTweet={this.onDeleteTweet.bind(this)}
         onPublishTweet={this.onPublishTweet.bind(this)}
         publishThread={this.onPublishThread.bind(this)}

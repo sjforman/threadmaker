@@ -13,7 +13,7 @@ export class Header extends Component {
           </a>
         </div>
         <div className="fl w-25 mt3 pa2">
-          <Login />
+          <Login history={this.props.history}/>
         </div>
       </div>
     );

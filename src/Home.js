@@ -11,7 +11,7 @@ export class Home extends Component {
           <img src={logo} className="dib w3 v-mid" alt="logo" />
           <h1 className="dib f3 f2-m f1-l fw2 black-90 mv3 v-mid">Threadbuilder</h1>
           <h2 className="f5 f4-m f3-l fw2 black-50 mt0 lh-copy">
-      The easiest way to compose, edit, and publish Twitter threads.
+            The easiest way to compose, edit, and publish Twitter threads.
           </h2>
       </div>
 
@@ -22,7 +22,7 @@ export class Home extends Component {
         </div>
 
         <div className="pa5 tc">
-          <Login />
+          <Login history={this.props.history} />
         </div>
 
       </div>
