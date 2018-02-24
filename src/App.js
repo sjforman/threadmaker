@@ -37,6 +37,8 @@ class App extends Component {
             ) : (
             <Dashboard
               history={history}
+              isAuthenticated={this.state.isAuthenticated}
+              screenName={this.state.screenName}
               />
             )
         )}/>

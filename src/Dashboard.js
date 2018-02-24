@@ -7,7 +7,12 @@ export class Dashboard extends Component {
     return (
       <div>
         <Header history={this.props.history}/>
-        <ThreadList url='http://localhost:3001/api/threads' jwtToken={localStorage.getItem('jwtToken')} pollInterval={2000}/>
+        <ThreadList
+          url='http://localhost:3001/api/threads'
+          jwtToken={localStorage.getItem('jwtToken')}
+          isAuthenticated={this.props.isAuthenticated}
+          screenName={this.props.screenName}
+          pollInterval={2000}/>
       </div>
     )
   }

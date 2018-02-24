@@ -105,7 +105,7 @@ export class ThreadList extends React.Component {
       <ThreadListContainer
         addThread={this.onAddThread}
         deleteThread={this.onDeleteThread.bind(this)}>
-        {threads}
+          {threads}
       </ThreadListContainer>
       </div>
       );
