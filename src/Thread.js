@@ -116,7 +116,6 @@ export class Thread extends React.Component {
 
   moveTweetUp(index, e) {
     if (index > 0) {
-      this.handleThreadChange();
       var array = this.state.tweets;
       var tweetToMove = array[index];
       array[index] = array[index - 1];
@@ -138,11 +137,17 @@ export class Thread extends React.Component {
   handleThreadChange() {
     var threadid = this.state.threadId;
     var array = this.state.tweets;
-    for (var i = 0; i < this.state.tweets.length; i++) {
-      array[i].prefix = (i + 1).toString() + '/ ';
-      array[i].postfix = '';
+    if (array.length < 3) {
+      for (var i = 0; i < this.state.tweets.length; i++) {
+        array[i].prefix = '';
+        array[i].postfix = '';
+      }
     }
-    if (array.length > 2) {
+    else {
+      for (var i = 0; i < this.state.tweets.length; i++) {
+        array[i].prefix = (i + 1).toString() + '/ ';
+        array[i].postfix = '';
+      }
       array[array.length - 1].postfix = ' /end';
     }
     this.setState({tweets: array});
