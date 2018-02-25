@@ -5,7 +5,7 @@ export class ThreadSummary extends React.Component {
 
     const threadlink = '/thread/' + this.props.id;
     var tweetsPresent = false;
-    var firstTweet = '';
+    var firstTweet = '...';
 
     if (this.props.tweets.length > 0) {
       tweetsPresent = true;
@@ -20,9 +20,7 @@ export class ThreadSummary extends React.Component {
             </div>
           <a className="link black bg-animate hover-blue" href={threadlink}>
             <div className="fl w-60 mv2 ba b--near-white">
-              {tweetsPresent &&
               <p>{firstTweet}</p>
-              }
             </div>
           </a>
           <div className="fl w-20 pa2">
