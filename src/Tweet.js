@@ -47,13 +47,19 @@ export class Tweet extends React.Component {
           <button className="f6 link dim br1 ba bw1 ph2 pv2 mb2 dib mid-gray" onClick={this.props.moveTweetDown.bind(this)}>move down</button>
         </div>
         <div className="fl w-100 w-80-ns pa2">
-            <span className="fl w-10 f3">{this.props.prefix}</span>
+            <div className="fl w-10">
+              <p className="f3 mv1 tc">{this.props.prefix}</p>
+              <p>&nbsp;</p>
+            </div>
             <textarea
               className="fl w-80 f3 db hover-black ba1 b--light-gray br2 mb2 h4 overflow-auto"
               value={this.props.text}
               onChange={this.props.handleTweetEdit}
             />
-            <span className="fl w-10 f3">{this.props.postfix}</span>
+            <div className="fl w-10 pl2 mt5">
+              <p className="f3 tc">{this.props.postfix}</p>
+              <p>&nbsp;</p>
+            </div>
         </div>
 
           <div className="fl w-100 w-10-ns pa2">
