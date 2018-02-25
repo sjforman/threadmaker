@@ -144,9 +144,9 @@ export class Thread extends React.Component {
       }
     }
     else {
-      for (var i = 0; i < this.state.tweets.length; i++) {
-        array[i].prefix = (i + 1).toString() + '/ ';
-        array[i].postfix = '';
+      for (var j = 0; j < this.state.tweets.length; j++) {
+        array[j].prefix = (j + 1).toString() + '/ ';
+        array[j].postfix = '';
       }
       array[array.length - 1].postfix = ' /end';
     }
