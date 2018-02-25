@@ -44,7 +44,9 @@ export class ThreadList extends React.Component {
   }
 
   onAddThread() {
-    var array = this.state.threads
+    var array = this.state.threads;
+    let threadId;
+    let numThreads = this.state.threads.length;
     var userId = localStorage.getItem('userId');
     axios({ method: 'POST', url: this.props.url, headers:
       { 'x-auth-token' : this.props.jwtToken,
@@ -52,14 +54,35 @@ export class ThreadList extends React.Component {
       }
     })
     .then(res => {
+      threadId = res.data.id;
       var thread = {
-        _id: res.data.id,
+        _id: threadId,
         userId: userId,
         tweets: []
       }
-    array.push(thread)
-    this.setState({threads: array})
-    console.log('Thread added: ' + JSON.stringify(thread));
+      array.push(thread);
+      this.setState({threads: array});
+      axios({ method: 'POST',
+            url: `${this.props.url}/${threadId}`,
+            headers: { 'x-auth-token': this.props.jwtToken }
+          })
+      .then(res => {
+        console.log(res);
+        var tweet = {
+          _id: res.data.tweet_id,
+          key: res.data.tweet_id,
+          text: '',
+          prefix: '',
+          postfix: '',
+          pubstatus: false,
+          publishedTweetId: ''
+        }
+        array[numThreads].tweets.push(tweet);
+        this.setState({threads: array});
+      })
+      .catch(err => {
+        console.error(err);
+      })
     })
     .catch(err => {
       console.error(err);
