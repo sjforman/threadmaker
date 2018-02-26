@@ -193,7 +193,7 @@ export class Thread extends React.Component {
     var that = this;
     axios({
         method: 'POST',
-        url: 'http://localhost:3001/api/publish',
+        url: process.env.REACT_APP_API_URL + '/publish',
         data:  {
           tweet: tweet,
           parentId: parentId

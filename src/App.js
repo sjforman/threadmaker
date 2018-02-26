@@ -49,9 +49,9 @@ class App extends Component {
             <Thread
               match={match}
               history={history}
-              pollInterval={2000}
+              pollInterval={process.env.REACT_APP_POLL_INTERVAL}
               thread_id={match.params.thread_id}
-              url='http://localhost:3001/api/threads'/>
+              url={process.env.REACT_APP_API_URL + '/threads'}/>
         )}/>
       </div>
     </Router>

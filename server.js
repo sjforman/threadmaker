@@ -18,8 +18,7 @@ var User = require('./model/user');
 var app = express();
 var router = express.Router();
 
-var twitterConfig = require('./twitter.config.js');
-var port = process.env.API_PORT || 3001;
+var port = process.env.REACT_APP_API_PORT || 3001;
 var passportConfig = require('./passport');
 var corsOption = {
   origin: true,
@@ -289,8 +288,8 @@ router.route('/threads/:thread_id')
 router.route('/publish')
   .post(authenticate, (req, res) => {
     var twitterClient = new twitter({
-      consumer_key: twitterConfig.consumerKey,
-      consumer_secret: twitterConfig.consumerSecret,
+      consumer_key: process.env.REACT_APP_TWITTER_CONSUMER_KEY,
+      consumer_secret: process.env.REACT_APP_TWITTER_CONSUMER_SECRET,
       access_token_key: req.headers.oauthtoken,
       access_token_secret: req.headers.oauthsecret
     });
@@ -324,7 +323,7 @@ app.listen(port, function() {
 });
 
 //db config
-var mongoDB = 'mongodb://localhost/27017';
+var mongoDB = process.env.REACT_APP_DB_URL
 mongoose.connect(mongoDB, { useMongoClient: true })
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
