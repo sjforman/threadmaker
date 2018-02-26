@@ -8,14 +8,22 @@ class ThreadContainer extends React.Component {
     return (
     <div>
       <Header history={this.props.history}/>
-      <div id="buttons" className="tc mb4">
-        <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 mr1 dib mid-gray" href="#" onClick={this.props.addTweet.bind(this, this.props.tweetCount)}>
-        Add tweet
-        </button>
-        <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 mr1 dib mid-gray" href="#" onClick={this.props.publishThread}>
-        Publish thread
-        </button>
-      </div>
+      {!this.props.pubStatus ?
+        (
+          <div id="buttons" className="tc mb4">
+            <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 mr1 dib mid-gray" href="#" onClick={this.props.addTweet.bind(this, this.props.tweetCount)}>
+              Add tweet </button>
+            <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 mr1 dib mid-gray" href="#" onClick={this.props.publishThread}>
+              Publish thread </button>
+          </div>
+        )
+          :
+        (
+          <div id="buttons" className="tc mb4">
+            <p>&nbsp;</p>
+          </div>
+        )
+      }
       <div>
         {this.props.children}
       </div>
@@ -31,7 +39,8 @@ export class Thread extends React.Component {
       characterLimit: '280',
       tweets: [],
       jwtToken: localStorage.getItem('jwtToken'),
-      threadId: this.props.thread_id
+      threadId: this.props.thread_id,
+      pubStatus: false
     };
 
     this.loadTweetsFromServer = this.loadTweetsFromServer.bind(this);
@@ -49,12 +58,12 @@ export class Thread extends React.Component {
     axios( { method: 'GET', url: `${this.props.url}/${this.state.threadId}`,
       headers: { 'x-auth-token': this.state.jwtToken }
     })
-      .then(res => {
-        this.setState({ tweets: res.data.tweets })
-      })
-      .catch(err => {
-        console.error(err);
-      })
+    .then(res => {
+      this.setState({ tweets: res.data.tweets, pubStatus: res.data.pubstatus })
+    })
+    .catch(err => {
+      console.error(err);
+    })
   }
 
   onAddTweet(index) {
@@ -153,7 +162,7 @@ export class Thread extends React.Component {
     this.setState({tweets: array});
     axios({ method: 'PUT',
             url: `${this.props.url}/${threadid}`,
-            data: array,
+            data: {'tweets' : array },
             headers: { 'x-auth-token': this.state.jwtToken }
     })
     .catch(err => {
@@ -166,22 +175,30 @@ export class Thread extends React.Component {
     var indexOfTweet = 0;
     var numTweetsPublished = 0;
 
-    var that = this;
-
-    /* call onPublishTweet with index = 0 and null parentId,
-     * and give it a callback that increments the index and
-     * counter, and in turn calls onPublishTweet again, with
-     * itself as the callback. */
+    var threadid = this.state.threadId;
+    var array = this.state.tweets;
 
     var callback = function(id) {
       indexOfTweet++;
       numTweetsPublished++;
       if (numTweetsPublished < numTweetsToPublish) {
-        that.onPublishTweet(indexOfTweet, null, id, callback)
+        this.onPublishTweet(indexOfTweet, null, id, callback)
       }
-      /* TODO: Handle the case where one of them fails. */
-    }
-    that.onPublishTweet(indexOfTweet, null, null, callback);
+      else {
+        this.setState({pubStatus: true});
+        axios({ method: 'PUT',
+                url: `${this.props.url}/${threadid}`,
+                data: {'tweets' : array, 'pubstatus': true },
+                headers: { 'x-auth-token': this.state.jwtToken }
+        })
+        .catch(err => {
+            console.error(err);
+        });
+      }
+       /* TODO: Handle the case where one of them fails. */
+    }.bind(this);
+
+    this.onPublishTweet(indexOfTweet, null, null, callback);
   }
 
   onPublishTweet(index, e, parentId, callback) {
@@ -257,13 +274,12 @@ export class Thread extends React.Component {
       )
     })
 
-
     return (
-      <div>
       <ThreadContainer
         tweetCount={this.state.tweets.length}
         addTweet={this.onAddTweet}
         history={this.props.history}
+        pubStatus={this.state.pubStatus}
         deleteTweet={this.onDeleteTweet.bind(this)}
         onPublishTweet={this.onPublishTweet.bind(this)}
         publishThread={this.onPublishThread.bind(this)}
@@ -273,7 +289,6 @@ export class Thread extends React.Component {
         moveTweetUp={this.moveTweetUp.bind(this)}>
             {tweets}
       </ThreadContainer>
-      </div>
       );
   }
 }

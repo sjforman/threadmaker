@@ -79,8 +79,8 @@ router.route('/auth/twitter/reverse')
       url: 'https://api.twitter.com/oauth/request_token',
       oauth: {
         oauth_callback: "http%3A%2F%2Flocalhost%3A3000%2Ftwitter-callback",
-        consumer_key: twitterConfig.consumerKey,
-        consumer_secret: twitterConfig.consumerSecret
+        consumer_key: process.env.REACT_APP_TWITTER_CONSUMER_KEY,
+        consumer_secret: process.env.REACT_APP_TWITTER_CONSUMER_SECRET
       }
     }, function (err, r, body) {
       if (err) {
@@ -101,8 +101,8 @@ router.route('/auth/twitter')
     request.post({
       url: 'https://api.twitter.com/oauth/access_token?oauth_verifier',
       oauth: {
-        consumer_key: twitterConfig.consumerKey,
-        consumer_secret: twitterConfig.consumerSecret,
+        consumer_key: process.env.REACT_APP_TWITTER_CONSUMER_KEY,
+        consumer_secret: process.env.REACT_APP_TWITTER_CONSUMER_SECRET,
         token: req.query.oauth_token
       },
       form: { oauth_verifier: req.query.oauth_verifier }
@@ -152,6 +152,7 @@ router.route('/threads')
     var thread = new Thread();
     thread.id = req.body._id;
     thread.userId = req.headers.userid;
+    thread.pubstatus = false;
     thread.save(function(err, thread) {
       if (err) {
         res.send(err);
@@ -262,7 +263,8 @@ router.route('/threads/:thread_id')
         res.send(err)
       }
       else {
-        thread.tweets = req.body;
+        thread.pubstatus = req.body.pubstatus;
+        thread.tweets = req.body.tweets;
         thread.save(function(err) {
           if (err) {
             res.send(err);

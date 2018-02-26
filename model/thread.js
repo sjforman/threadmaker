@@ -7,7 +7,8 @@ var Tweets = require('./tweet.js');
 
 var ThreadSchema = new Schema({
   userId: mongoose.Schema.Types.ObjectId,
-  tweets: [Tweets]
+  tweets: [Tweets],
+  pubstatus: Boolean
 });
 
 module.exports = mongoose.model('Thread', ThreadSchema);

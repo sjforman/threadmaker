@@ -40,6 +40,7 @@ export class ThreadList extends React.Component {
     })
       .then(res => {
         this.setState({ threads: res.data })
+        console.log(this.state);
       })
   }
 
@@ -58,7 +59,8 @@ export class ThreadList extends React.Component {
       var thread = {
         _id: threadId,
         userId: userId,
-        tweets: []
+        tweets: [],
+        pubstatus: false
       }
       array.push(thread);
       this.setState({threads: array});
@@ -67,7 +69,6 @@ export class ThreadList extends React.Component {
             headers: { 'x-auth-token': this.props.jwtToken }
           })
       .then(res => {
-        console.log(res);
         var tweet = {
           _id: res.data.tweet_id,
           key: res.data.tweet_id,
@@ -79,6 +80,7 @@ export class ThreadList extends React.Component {
         }
         array[numThreads].tweets.push(tweet);
         this.setState({threads: array});
+        console.log(this.state);
       })
       .catch(err => {
         console.error(err);
@@ -118,6 +120,7 @@ export class ThreadList extends React.Component {
           id={thread._id}
           index={index}
           tweets={thread.tweets}
+          pubstatus={thread.pubstatus}
           numTweets={thread.tweets.length || 0}
           deleteThread={this.onDeleteThread.bind(this, index)}/>
       )

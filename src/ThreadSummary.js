@@ -6,7 +6,7 @@ export class ThreadSummary extends React.Component {
     const threadlink = '/thread/' + this.props.id;
     var firstTweet = '...';
 
-    if (this.props.tweets.length > 0) {
+    if (this.props.tweets.length > 0 && this.props.tweets[0].text) {
       firstTweet = this.props.tweets[0].text.slice(0,80) + '...';
     }
 
