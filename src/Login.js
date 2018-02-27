@@ -36,10 +36,8 @@ export class Login extends React.Component {
         localStorage.setItem('oauthSecret', user.twitterProvider.tokenSecret);
         localStorage.setItem('oauthVerifier', user.twitterProvider.oauth_verifier);
       }
-    })
-    .then(() => {
-      this.props.history.push('/dashboard');
     });
+    this.props.history.push('/dashboard');
   }
 
   onFailure(error) {
