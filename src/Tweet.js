@@ -64,13 +64,12 @@ export class Tweet extends React.Component {
 
           <div className="fl w-100 w-10-ns pa2">
             <div>
-              <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 dib mid-gray" onClick={this.props.deleteTweet.bind(this)}>
-                Delete tweet
+              <button className="f6 dim br1 ba bw1 ph3 pv2 mb2 dib mid-gray" onClick={this.props.deleteTweet.bind(this)}>
+                <svg className="w1" viewBox="0 0 32 32">
+                  <path fill="#1da3b4" d="M4 4 L10 4 L12 2 L20 2 L22 4 L28 4 L29 8 L3 8 z M5 10 L27 10 L26 30 L6 30 z"></path>
+                </svg>
               </button>
             </div>
-            <button className="f6 link dim br1 ba bw1 ph3 pv2 mb2 dib mid-gray" onClick={this.props.onPublishTweet.bind(this)}>
-              Publish tweet
-            </button>
             <CharacterCounter text={this.props.text} characterLimit={this.props.characterLimit} />
           </div>
         </div>
