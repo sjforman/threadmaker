@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Login } from './Login';
+import { Logout } from './Login';
 import logo from './logo.svg';
 
 export class Header extends Component {
@@ -13,7 +13,7 @@ export class Header extends Component {
           </a>
         </div>
         <div className="fl tr w-25 mt3 pt2 pr4">
-          <Login history={this.props.history}/>
+          <Logout history={this.props.history} screenName={this.props.screenName}/>
         </div>
       </div>
     );

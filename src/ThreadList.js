@@ -25,6 +25,7 @@ export class ThreadList extends React.Component {
     this.state = {
       threads: []
     };
+
     this.loadThreadsFromServer = this.loadThreadsFromServer.bind(this);
     this.onAddThread = this.onAddThread.bind(this);
     this.onDeleteThread = this.onDeleteThread.bind(this);
@@ -35,12 +36,11 @@ export class ThreadList extends React.Component {
   loadThreadsFromServer() {
     axios({ method: 'GET', url: this.props.url, headers:
       { 'x-auth-token' : this.props.jwtToken,
-        'userId' : localStorage.getItem('userId')
+        'userId' : this.props.userId
       }
     })
       .then(res => {
         this.setState({ threads: res.data })
-        console.log(this.state);
       })
   }
 
@@ -80,7 +80,6 @@ export class ThreadList extends React.Component {
         }
         array[numThreads].tweets.push(tweet);
         this.setState({threads: array});
-        console.log(this.state);
       })
       .catch(err => {
         console.error(err);
@@ -107,12 +106,11 @@ export class ThreadList extends React.Component {
       });
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.loadThreadsFromServer();
   }
 
   render() {
-
     var threads = this.state.threads.map((thread, index) => {
       return (
         <ThreadSummary
