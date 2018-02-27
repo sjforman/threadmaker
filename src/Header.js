@@ -12,7 +12,7 @@ export class Header extends Component {
             <h1 className="lh-title dib v-mid">Threadbuilder</h1>
           </a>
         </div>
-        <div className="fl tr w-25 mt3 pt2 ph4">
+        <div className="fl tr w-25 mt3 pt2 pr4">
           <Login history={this.props.history}/>
         </div>
       </div>

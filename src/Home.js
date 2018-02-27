@@ -16,7 +16,7 @@ export class Home extends Component {
         </div>
 
       <div className="mr-auto ml-auto w-60-ns w-100 pa2">
-        <p className="f5 f4-ns lh-copy">
+        <p className="f5 f4-ns lh-copy tj">
         With Threadbuilder, you can draft, save, edit, and reorder the tweets in a thread until you’re satisfied. Then click ‘publish’ to send ’em all to Twitter, properly threaded and with automatic numbering.
         </p>
       </div>

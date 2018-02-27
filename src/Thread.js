@@ -171,6 +171,10 @@ export class Thread extends React.Component {
   }
 
   onPublishThread() {
+    function sleep (time) {
+      return new Promise((resolve) => setTimeout(resolve, time));
+    }
+
     var numTweetsToPublish = this.state.tweets.length;
     var indexOfTweet = 0;
     var numTweetsPublished = 0;
@@ -182,7 +186,9 @@ export class Thread extends React.Component {
       indexOfTweet++;
       numTweetsPublished++;
       if (numTweetsPublished < numTweetsToPublish) {
+        sleep(500).then(() => {
         this.onPublishTweet(indexOfTweet, null, id, callback)
+        });
       }
       else {
         this.setState({pubStatus: true});

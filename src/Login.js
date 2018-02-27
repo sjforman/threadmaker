@@ -24,6 +24,7 @@ export class Login extends React.Component {
       console.error(response);
       return;
     }
+    console.log(response);
     const token = response.headers.get('x-auth-token');
     response.json().then(user => {
       if (token) {
