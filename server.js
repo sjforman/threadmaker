@@ -46,18 +46,24 @@ var createToken = function(auth) {
 };
 
 var getAvatarUrl = function(req, res, next) {
-  console.log(req)
   request.get({
-    url: 'https://api.twitter.com/1.1/users/show.json?screen_name',
+    url: 'https://api.twitter.com/1.1/users/show.json',
+    qs: { screen_name: req.body.screen_name },
     oauth: { 
       consumer_key: process.env.REACT_APP_TWITTER_CONSUMER_KEY,
       consumer_secret: process.env.REACT_APP_TWITTER_CONSUMER_SECRET,
-      screen_name: req.body.screen_name
     }
-  }), function (err, r, body) {
-    console.log(body);
-  }
-  return next();
+  }, function (err, r, body) {
+    if (err) {
+      return res.send(500, { message: err.message });
+    }
+    else {
+      var parsedBody = JSON.parse(body);
+      var avatarUrl = parsedBody.profile_image_url;
+      req.body.avatarUrl = avatarUrl;
+      return next();
+    }
+  });
 }
 
 var generateToken = function(req, res, next) {
@@ -66,8 +72,11 @@ var generateToken = function(req, res, next) {
 }
 
 var sendToken = function(req, res) {
-  res.setHeader('x-auth-token', req.token);
+  res.set({
+    'x-auth-token': req.token
+  });
   req.user.twitterProvider.oauth_verifier = req.body.oauth_verifier;
+  req.user.twitterProvider.avatarUrl = req.body.avatarUrl;
   return res.status(200).send(JSON.stringify(req.user));
 }
 
@@ -129,7 +138,7 @@ router.route('/auth/twitter')
 
       const bodyString = '{ "' + body.replace(/&/g, '", "').replace(/=/g, '": "') + '"}';
       const parsedBody = JSON.parse(bodyString);
-
+      
       req.body['oauth_token'] = parsedBody.oauth_token;
       req.body['oauth_token_secret'] = parsedBody.oauth_token_secret;
       req.body['oauth_verifier'] = req.query.oauth_verifier;

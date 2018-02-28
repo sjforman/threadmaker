@@ -47,6 +47,7 @@ class App extends Component {
               isAuthenticated={this.state.isAuthenticated}
               screenName={this.state.screenName}
               userId={this.state.userId}
+              avatarUrl={this.state.avatarUrl}
               jwtToken={this.state.jwtToken}/>
         )}/>
         <Route path="/thread/:thread_id" render={({match, history})=>

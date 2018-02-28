@@ -98,12 +98,13 @@ export class Login extends React.Component {
             screenName: user.twitterProvider.screen_name,
             jwtToken: token,
             userId: user._id,
-            avatarUrl: ''
+            avatarUrl: user.twitterProvider.avatarUrl
           });
+          console.log(this.state);
           localStorage.setItem('jwtToken', token);
           localStorage.setItem('twitterId', user.twitterProvider.id);
           localStorage.setItem('screenName', user.twitterProvider.screen_name);
-          localStorage.setItem('avatarUrl', user.twitterProvider.avatar_url);
+          localStorage.setItem('avatarUrl', user.twitterProvider.avatarUrl);
           localStorage.setItem('userId', user._id);
           localStorage.setItem('oauthToken', user.twitterProvider.token);
           localStorage.setItem('oauthSecret', user.twitterProvider.tokenSecret);
@@ -124,12 +125,14 @@ export class Login extends React.Component {
     let jwtToken = this.state.jwtToken;
     let userId = this.state.userId;
     let screenName = this.state.screenName;
+    let avatarUrl = this.state.avatarUrl;
     if (this.state.isAuthenticated) {
       this.props.history.push({
         pathname: '/dashboard',
         jwtToken: jwtToken,
         userId: userId,
-        screenName: screenName
+        screenName: screenName,
+        avatarUrl: avatarUrl
       });
     }
   }
