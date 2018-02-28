@@ -13,7 +13,10 @@ export class Header extends Component {
           </a>
         </div>
         <div className="fl tr w-25 mt3 pt2 pr4">
-          <Logout history={this.props.history} screenName={this.props.screenName}/>
+          <Logout 
+            history={this.props.history} 
+            screenName={this.props.screenName}
+            avatarUrl={this.props.avatarUrl}/>
         </div>
       </div>
     );

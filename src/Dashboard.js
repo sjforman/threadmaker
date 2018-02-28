@@ -9,17 +9,20 @@ export class Dashboard extends Component {
     let jwtToken = this.props.jwtToken;
     let userId = this.props.userId;
     let screenName = this.props.screenName;
+    let avatarUrl = this.props.avatarUrl;
 
     if (this.props.history.location.jwtToken) {
       jwtToken = this.props.history.location.jwtToken;
       userId = this.props.history.location.userId;
       screenName = this.props.history.location.screenName;
+      avatarUrl = this.props.history.location.avatarUrl;
     }
 
     this.state = {
       jwtToken: jwtToken,
       userId: userId,
-      screenName: screenName
+      screenName: screenName,
+      avatarUrl: avatarUrl
     };
 
   }
@@ -27,9 +30,10 @@ export class Dashboard extends Component {
   render() {
     return (
       <div>
-        <Header 
+        <Header
           history={this.props.history}
-          screenName={this.state.screenName}/>
+          screenName={this.state.screenName}
+          avatarUrl={this.state.avatarUrl}/>
         <ThreadList
           url={process.env.REACT_APP_API_URL + '/threads'}
           jwtToken={this.state.jwtToken}

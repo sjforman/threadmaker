@@ -8,7 +8,13 @@ class App extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { isAuthenticated: false, screenName: null, jwtToken: null, userId: null};
+    this.state = {
+      isAuthenticated: false,
+      screenName: null,
+      jwtToken: null,
+      userId: null,
+      avatarUrl: null
+    };
   }
 
   componentWillMount() {
@@ -19,7 +25,14 @@ class App extends Component {
     else {
       let screenName = localStorage.getItem('screenName');
       let userId = localStorage.getItem('userId');
-      this.setState({isAuthenticated: true, screenName: screenName, jwtToken: token, userId: userId});
+      let avatarUrl = localStorage.getItem('avatarUrl');
+      this.setState({
+        isAuthenticated: true,
+        screenName: screenName,
+        jwtToken: token,
+        userId: userId,
+        avatarUrl: avatarUrl
+      });
     }
   }
 

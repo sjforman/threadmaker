@@ -9,7 +9,8 @@ var UserSchema = new Schema({
     type: {
       id: String,
       screen_name: String,
-      token: String
+      token: String,
+      avatarUrl: String
     }
   }
 });

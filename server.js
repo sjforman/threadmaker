@@ -45,6 +45,21 @@ var createToken = function(auth) {
   });
 };
 
+var getAvatarUrl = function(req, res, next) {
+  console.log(req)
+  request.get({
+    url: 'https://api.twitter.com/1.1/users/show.json?screen_name',
+    oauth: { 
+      consumer_key: process.env.REACT_APP_TWITTER_CONSUMER_KEY,
+      consumer_secret: process.env.REACT_APP_TWITTER_CONSUMER_SECRET,
+      screen_name: req.body.screen_name
+    }
+  }), function (err, r, body) {
+    console.log(body);
+  }
+  return next();
+}
+
 var generateToken = function(req, res, next) {
   req.token = createToken(req.auth);
   return next();
@@ -55,6 +70,7 @@ var sendToken = function(req, res) {
   req.user.twitterProvider.oauth_verifier = req.body.oauth_verifier;
   return res.status(200).send(JSON.stringify(req.user));
 }
+
 
 /* TODO: tokens expire after 15 minutes. How to handle? */
 
@@ -132,7 +148,7 @@ router.route('/auth/twitter')
     };
 
     return next();
-  }, generateToken, sendToken);
+  }, getAvatarUrl, generateToken, sendToken);
 
 
 router.route('/threads')

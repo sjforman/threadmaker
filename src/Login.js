@@ -5,16 +5,29 @@ export class Logout extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = { isAuthenticated: false, screenName: null};
+    this.state = { 
+      isAuthenticated: false, 
+      screenName: null, 
+      avatarUrl: null
+    };
   }
 
   loadUserFromToken() {
     let screenName = this.props.screenName;
-    this.setState({isAuthenticated: true, screenName: screenName });
+    let avatarUrl = this.props.avatarUrl;
+    this.setState({
+      isAuthenticated: true, 
+      screenName: screenName, 
+      avatarUrl: avatarUrl
+    });
   }
 
   logout() {
-    this.setState({ isAuthenticated: false, screenName: null });
+    this.setState({ 
+      isAuthenticated: false, 
+      screenName: null, 
+      avatarUrl: null
+    });
     localStorage.clear();
     this.props.history.push('/');
   }
@@ -26,10 +39,13 @@ export class Logout extends React.Component {
   render() {
     return(
       <div>
+        <div className="dib pr2 v-mid">
+          <img className="w2 br-100" src={this.state.avatarUrl} alt="avatar"/>
+        </div>
         <div className="dib pr2">
           <p>{this.state.screenName}</p>
         </div>
-        <div className="dib">
+        <div className="dib pb2">
           <button onClick={this.logout.bind(this)} className="button" >
             Log out
           </button>
@@ -43,7 +59,11 @@ export class Login extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = { isAuthenticated: false, screenName: null};
+    this.state = { 
+      isAuthenticated: false,
+      screenName: null,
+      avatarUrl: null
+    };
   }
 
   loadUserFromToken() {
@@ -53,7 +73,12 @@ export class Login extends React.Component {
     }
     else {
       let screenName = localStorage.getItem('screenName');
-      this.setState({isAuthenticated: true, screenName: screenName });
+      let avatarUrl = localStorage.getItem('avatarUrl');
+      this.setState({
+        isAuthenticated: true,
+        screenName: screenName,
+        avatarUrl: avatarUrl
+      });
       this.props.history.push('/dashboard');
     }
   }
@@ -66,11 +91,19 @@ export class Login extends React.Component {
     const token = response.headers.get('x-auth-token');
     response.json()
       .then(user => {
+        console.log(user);
         if (token) {
-          this.setState({isAuthenticated: true, screenName: user.twitterProvider.screen_name, jwtToken: token, userId: user._id });
+          this.setState({
+            isAuthenticated: true,
+            screenName: user.twitterProvider.screen_name,
+            jwtToken: token,
+            userId: user._id,
+            avatarUrl: ''
+          });
           localStorage.setItem('jwtToken', token);
           localStorage.setItem('twitterId', user.twitterProvider.id);
           localStorage.setItem('screenName', user.twitterProvider.screen_name);
+          localStorage.setItem('avatarUrl', user.twitterProvider.avatar_url);
           localStorage.setItem('userId', user._id);
           localStorage.setItem('oauthToken', user.twitterProvider.token);
           localStorage.setItem('oauthSecret', user.twitterProvider.tokenSecret);

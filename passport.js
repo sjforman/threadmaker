@@ -4,7 +4,6 @@
 var passport = require('passport');
 var TwitterTokenStrategy = require('passport-twitter-token');
 var User = require('mongoose').model('User');
-//var twitterConfig = require('./twitter.config.js');
 
 module.exports = function() {
   passport.use(new TwitterTokenStrategy({
