@@ -7,7 +7,7 @@ class ThreadContainer extends React.Component {
   render() {
     return (
     <div>
-      <Header history={this.props.history}/>
+      <Header history={this.props.history} avatarUrl={this.props.avatarUrl} screenName={this.props.screenName}/>
       {!this.props.pubStatus ?
         (
           <div id="buttons" className="tc mb4">
@@ -40,7 +40,9 @@ export class Thread extends React.Component {
       tweets: [],
       jwtToken: localStorage.getItem('jwtToken'),
       threadId: this.props.thread_id,
-      pubStatus: false
+      pubStatus: false,
+      avatarUrl: this.props.avatarUrl,
+      screenName: this.props.screenName
     };
 
     this.loadTweetsFromServer = this.loadTweetsFromServer.bind(this);
@@ -282,6 +284,8 @@ export class Thread extends React.Component {
 
     return (
       <ThreadContainer
+        avatarUrl={this.state.avatarUrl}
+        screenName={this.state.screenName}
         tweetCount={this.state.tweets.length}
         addTweet={this.onAddTweet}
         history={this.props.history}

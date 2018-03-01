@@ -59,6 +59,8 @@ class App extends Component {
               history={history}
               pollInterval={process.env.REACT_APP_POLL_INTERVAL}
               thread_id={match.params.thread_id}
+              avatarUrl={this.state.avatarUrl}
+              screenName={this.state.screenName}
               url={process.env.REACT_APP_API_URL + '/threads'}/>
         )}/>
       </div>
