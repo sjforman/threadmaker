@@ -10,6 +10,7 @@ var expressJwt = require('express-jwt');
 var request = require('request');
 var cors = require('cors');
 var twitter = require('twitter');
+var encodeUrl = require('encodeurl');
 
 var Thread = require('./model/thread');
 var Tweet = require('./model/tweet');
@@ -100,10 +101,12 @@ router.get('/', authenticate, function(req, res) {
 
 router.route('/auth/twitter/reverse')
   .post(function(req, res) {
+    var oauth_callback = encodeUrl(process.env.REACT_APP_API_URL + '/twitter-callback');
+    console.log(oauth_callback);
     request.post({
       url: 'https://api.twitter.com/oauth/request_token',
       oauth: {
-        oauth_callback: "http%3A%2F%2Flocalhost%3A3000%2Ftwitter-callback",
+        oauth_callback: oauth_callback,
         consumer_key: process.env.REACT_APP_TWITTER_CONSUMER_KEY,
         consumer_secret: process.env.REACT_APP_TWITTER_CONSUMER_SECRET
       }

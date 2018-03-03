@@ -3,4 +3,4 @@ node_modules
 build/
 .twitter.config.js
 coverage/
-.env
+.env*

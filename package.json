@@ -8,6 +8,7 @@
     "cookie-parser": "^1.4.3",
     "cookie-session": "^2.0.0-beta.3",
     "cors": "^2.8.4",
+    "encodeurl": "^1.0.2",
     "express": "^4.16.2",
     "express-jwt": "^5.3.0",
     "foreman": "^2.0.0",
@@ -24,6 +25,7 @@
     "react-twitter-auth": "0.0.10",
     "request": "^2.83.0",
     "request-debug": "^0.2.0",
+    "serve": "^6.5.1",
     "shortid": "^2.2.8",
     "tachyons": "^4.9.0",
     "tachyons-cli": "^1.2.0",
@@ -32,6 +34,7 @@
   "scripts": {
     "start": "react-scripts start",
     "start-dev": "nf start -p 3000",
+    "now-start": "serve --single ./build | node server.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",

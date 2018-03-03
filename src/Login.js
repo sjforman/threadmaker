@@ -114,7 +114,7 @@ export class Login extends React.Component {
   }
 
   onFailure(error) {
-    console.log(error)
+    console.error(error)
   }
 
   componentWillMount() {
