@@ -28,6 +28,10 @@ var corsOption = {
   exposedHeaders: ['x-auth-token']
 }
 
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('/build'));
+}
+
 app.use(cors(corsOption));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
