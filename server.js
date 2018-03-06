@@ -11,6 +11,8 @@ var request = require('request');
 var cors = require('cors');
 var twitter = require('twitter');
 var encodeUrl = require('encodeurl');
+var dotenv = require('dotenv').config();
+var path = require('path');
 
 var Thread = require('./model/thread');
 var Tweet = require('./model/tweet');
@@ -28,9 +30,9 @@ var corsOption = {
   exposedHeaders: ['x-auth-token']
 }
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('/build'));
-}
+console.log(process.env.NODE_ENV);
+
+app.use(express.static(path.join(__dirname, 'build')));
 
 app.use(cors(corsOption));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -99,7 +101,7 @@ var authenticate = expressJwt({
   }
 });
 
-router.get('/', authenticate, function(req, res) {
+router.get('/', function(req, res) {
   res.json({ message: 'API Initialized!'});
 });
 
