@@ -1,6 +1,4 @@
 .DS_STORE
 node_modules
-build/
-.twitter.config.js
 coverage/
 .env*
