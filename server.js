@@ -37,14 +37,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 passportConfig();
 
-/* TODO: in production replace 'my-secret' with
- * either the secret for HMAC algorithms, or the PEM encoded private key for RSA and ECDSA
- * more instructions in the library documentation */
-
 var createToken = function(auth) {
   return jwt.sign({
     id: auth.id
-  }, 'my-secret',
+  }, process.env.REACT_APP_HMAC_SECRET,
   {
     expiresIn: 60*120
   });
@@ -85,11 +81,8 @@ var sendToken = function(req, res) {
   return res.status(200).send(JSON.stringify(req.user));
 }
 
-
-/* TODO: tokens expire after 15 minutes. How to handle? */
-
 var authenticate = expressJwt({
-  secret: 'my-secret',
+  secret: process.env.REACT_APP_HMAC_SECRET,
   requestProperty: 'auth',
   getToken: function(req) {
     if (req.headers['x-auth-token']) {
@@ -105,11 +98,7 @@ router.get('/', function(req, res) {
 
 router.route('/auth/twitter/reverse')
   .post(function(req, res) {
-    //var oauth_callback = process.env.REACT_APP_API_URL;
-    //console.log(oauth_callback);
-    //var oauth_callback = 'http://localhost:3000';
     var oauth_callback = process.env.REACT_APP_URL;
-    console.log(oauth_callback);
     request.post({
       url: 'https://api.twitter.com/oauth/request_token',
       oauth: {
