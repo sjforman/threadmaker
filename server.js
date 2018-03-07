@@ -10,7 +10,6 @@ var expressJwt = require('express-jwt');
 var request = require('request');
 var cors = require('cors');
 var twitter = require('twitter');
-var encodeUrl = require('encodeurl');
 var dotenv = require('dotenv').config();
 var path = require('path');
 
@@ -30,9 +29,8 @@ var corsOption = {
   exposedHeaders: ['x-auth-token']
 }
 
-console.log(process.env.NODE_ENV);
-
 app.use(express.static(path.join(__dirname, 'build')));
+
 
 app.use(cors(corsOption));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -65,8 +63,8 @@ var getAvatarUrl = function(req, res, next) {
       return res.send(500, { message: err.message });
     }
     else {
-      var parsedBody = JSON.parse(body);
-      var avatarUrl = parsedBody.profile_image_url;
+      const parsedBody = JSON.parse(r.body);
+      var avatarUrl = parsedBody.profile_image_url_https;
       req.body.avatarUrl = avatarUrl;
       return next();
     }
@@ -107,12 +105,15 @@ router.get('/', function(req, res) {
 
 router.route('/auth/twitter/reverse')
   .post(function(req, res) {
-    var oauth_callback = encodeUrl(process.env.REACT_APP_API_URL + '/twitter-callback');
+    //var oauth_callback = process.env.REACT_APP_API_URL;
+    //console.log(oauth_callback);
+    //var oauth_callback = 'http://localhost:3000';
+    var oauth_callback = process.env.REACT_APP_URL;
     console.log(oauth_callback);
     request.post({
       url: 'https://api.twitter.com/oauth/request_token',
       oauth: {
-        oauth_callback: oauth_callback,
+        callback: oauth_callback,
         consumer_key: process.env.REACT_APP_TWITTER_CONSUMER_KEY,
         consumer_secret: process.env.REACT_APP_TWITTER_CONSUMER_SECRET
       }
@@ -360,6 +361,14 @@ app.listen(port, function() {
 
 //db config
 var mongoDB = process.env.REACT_APP_DB_URL
-mongoose.connect(mongoDB, { useMongoClient: true })
+
+var mongoConnectionString =
+  process.env.REACT_APP_DB_PROTOCOL + '://' +
+  process.env.REACT_APP_DB_USER + ':' +
+  process.env.REACT_APP_DB_PASS + '@' +
+  process.env.REACT_APP_DB_URI + '/' +
+  process.env.REACT_APP_DB_NAME;
+
+mongoose.connect(mongoConnectionString, { useMongoClient: true})
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));

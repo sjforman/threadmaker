@@ -91,7 +91,6 @@ export class Login extends React.Component {
     const token = response.headers.get('x-auth-token');
     response.json()
       .then(user => {
-        console.log(user);
         if (token) {
           this.setState({
             isAuthenticated: true,
@@ -100,7 +99,6 @@ export class Login extends React.Component {
             userId: user._id,
             avatarUrl: user.twitterProvider.avatarUrl
           });
-          console.log(this.state);
           localStorage.setItem('jwtToken', token);
           localStorage.setItem('twitterId', user.twitterProvider.id);
           localStorage.setItem('screenName', user.twitterProvider.screen_name);
