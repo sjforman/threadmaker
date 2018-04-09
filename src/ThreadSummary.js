@@ -16,23 +16,8 @@ export class ThreadSummary extends React.Component {
             <div className="fl w-10 pa2 tc">
                 <p>{this.props.numTweets}</p>
             </div>
-
-
-            {this.props.pubstatus ?
-              (
-            <div className="fl w-10 pa2 tc">
-                <p>published</p>
-            </div>
-              ) :
-              (
-            <div className="fl w-10 pa2 tc">
-                <p>draft</p>
-            </div>
-              )
-            }
-
           <a className="link black bg-animate hover-blue" href={threadlink}>
-            <div className="fl w-70 mv2 ba b--near-white">
+            <div className="fl w-80 mv2 ba b--near-white">
               <p>{firstTweet}</p>
             </div>
           </a>

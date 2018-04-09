@@ -111,7 +111,22 @@ export class ThreadList extends React.Component {
   }
 
   render() {
-    var threads = this.state.threads.map((thread, index) => {
+    let threads = this.state.threads;
+    let draftThreadArray = threads.filter(thread => thread.pubstatus === undefined);
+    let draftThreads = draftThreadArray.map((thread, index) => {
+      return (
+        <ThreadSummary
+          key={thread._id}
+          id={thread._id}
+          index={index}
+          tweets={thread.tweets}
+          pubstatus={thread.pubstatus}
+          numTweets={thread.tweets.length || 0}
+          deleteThread={this.onDeleteThread.bind(this, index)}/>
+      )
+    })
+    let publishedThreadArray = threads.filter(thread => thread.pubstatus !== undefined);
+    let publishedThreads = publishedThreadArray.map((thread, index) => {
       return (
         <ThreadSummary
           key={thread._id}
@@ -129,7 +144,10 @@ export class ThreadList extends React.Component {
       <ThreadListContainer
         addThread={this.onAddThread}
         deleteThread={this.onDeleteThread.bind(this)}>
-          {threads}
+          <h2 className="tc">Drafts</h2>
+            {draftThreads}
+          <h2 className="tc">Published</h2>
+            {publishedThreads}
       </ThreadListContainer>
       </div>
       );
