@@ -112,7 +112,7 @@ export class ThreadList extends React.Component {
 
   render() {
     let threads = this.state.threads;
-    let draftThreadArray = threads.filter(thread => thread.pubstatus === undefined);
+    let draftThreadArray = threads.filter(thread => thread.pubstatus !== true);
     let draftThreads = draftThreadArray.map((thread, index) => {
       return (
         <ThreadSummary
@@ -125,7 +125,7 @@ export class ThreadList extends React.Component {
           deleteThread={this.onDeleteThread.bind(this, index)}/>
       )
     })
-    let publishedThreadArray = threads.filter(thread => thread.pubstatus !== undefined);
+    let publishedThreadArray = threads.filter(thread => thread.pubstatus === true);
     let publishedThreads = publishedThreadArray.map((thread, index) => {
       return (
         <ThreadSummary
